@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <% include templates/head.ejs %>
+
+    <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet"> 
+    <!--Dcounts-->
+    <link rel="stylesheet" type="text/css" href='css/dcounts.css'>
+  </head>
+  <body>
+    <!-- Pre-loader start -->
+    <div class="theme-loader">
+      <div class="loader-track">
+        <div class="preloader-wrapper">
+          <div class="spinner-layer spinner-blue">
+            <div class="circle-clipper left">
+              <div class="circle"></div>
+            </div>
+            <div class="gap-patch">
+              <div class="circle"></div>
+            </div>
+            <div class="circle-clipper right">
+              <div class="circle"></div>
+            </div>
+          </div>
+
+          <div class="spinner-layer spinner-red">
+            <div class="circle-clipper left">
+              <div class="circle"></div>
+            </div>
+            <div class="gap-patch">
+              <div class="circle"></div>
+            </div>
+            <div class="circle-clipper right">
+              <div class="circle"></div>
+            </div>
+          </div>
+
+          <div class="spinner-layer spinner-yellow">
+            <div class="circle-clipper left">
+              <div class="circle"></div>
+            </div>
+            <div class="gap-patch">
+              <div class="circle"></div>
+            </div>
+            <div class="circle-clipper right">
+              <div class="circle"></div>
+            </div>
+          </div>
+            
+          <div class="spinner-layer spinner-green">
+            <div class="circle-clipper left">
+              <div class="circle"></div>
+            </div>
+            <div class="gap-patch">
+              <div class="circle"></div>
+            </div>
+            <div class="circle-clipper right">
+              <div class="circle"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Pre-loader end -->
+    <div id="pcoded" class="pcoded">
+      <div class="pcoded-overlay-box"></div>
+        <div class="pcoded-container navbar-wrapper">
+          <nav class="navbar header-navbar pcoded-header">
+            <div class="navbar-wrapper">
+              <div class="navbar-logo">
+                <a href="#!" class="mobile-menu waves-effect waves-light" id="mobile-collapse">
+                  <i class="ti-menu"></i>
+                </a>
+
+                <a href="#!">
+                  <img class="img-fluid" src="images/logo.png" alt="Logo">
+                </a>
+                <a class="mobile-options waves-effect waves-light">
+                  <i class="ti-more"></i>
+                </a>
+              </div>
+              <div class="navbar-container container-fluid">
+                <ul class="nav-left">
+                  <li>
+                    <div class="sidebar_toggle"><a href="javascript:void(0)"><i class="ti-menu"></i></a></div>
+                  </li>
+                  <li>
+                    <a href="#!" onclick="javascript:toggleFullScreen()" class="waves-effect waves-light">
+                        <i class="ti-fullscreen"></i>
+                    </a>
+                  </li>
+                </ul>
+                <ul class="nav-right">
+                  <li class="header-notification">
+                    <a href="#!" class="waves-effect waves-light">
+                      <i class="ti-bell"></i>
+                      <span class="badge bg-c-red"></span>
+                    </a>
+                    <ul class="show-notification">
+                      <li>
+                        <h6>Notifications</h6>
+                        <label class="label label-danger">New</label>
+                      </li>
+                      <li class="waves-effect waves-light">
+                        <div class="media">
+                          <img class="d-flex align-self-center img-radius" src="images/avatar-2.jpg" alt="Generic placeholder image">
+                            <div class="media-body">
+                                <h5 class="notification-user">John Doe</h5>
+                                <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
+                                <span class="notification-time">30 minutes ago</span>
+                            </div>
+                        </div>
+                      </li>
+                      <li class="waves-effect waves-light">
+                        <div class="media">
+                          <img class="d-flex align-self-center img-radius" src="images/avatar-4.jpg" alt="Generic placeholder image">
+                            <div class="media-body">
+                                <h5 class="notification-user">Joseph William</h5>
+                                <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
+                                <span class="notification-time">30 minutes ago</span>
+                            </div>
+                        </div>
+                      </li>
+                      <li class="waves-effect waves-light">
+                        <div class="media">
+                          <img class="d-flex align-self-center img-radius" src="images/avatar-3.jpg" alt="Generic placeholder image">
+                            <div class="media-body">
+                                <h5 class="notification-user">Sara Soudein</h5>
+                                <p class="notification-msg">Lorem ipsum dolor sit amet, consectetuer elit.</p>
+                                <span class="notification-time">30 minutes ago</span>
+                            </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </li>
+                  <li class="user-profile header-notification">
+                    <a href="#!" class="waves-effect waves-light">
+                      <img src="images/avatar-4.jpg" class="img-radius" alt="User-Profile-Image">
+                      <span>John Doe</span>
+                      <i class="ti-angle-down"></i>
+                    </a>
+                    <ul class="show-notification profile-notification">
+                      <li class="waves-effect waves-light">
+                        <a href="/error">
+                            <i class="ti-settings"></i> Settings
+                        </a>
+                      </li>
+                      <li class="waves-effect waves-light">
+                        <a href="/error"> <!--user-profile.html-->
+                            <i class="ti-user"></i> Profile
+                        </a>
+                      </li>
+                      <li class="waves-effect waves-light">
+                        <a href="/pesanMasuk"><!--email-inbox.html-->
+                            <i class="ti-email"></i> My Messages
+                        </a>
+                      </li>
+                      <li class="waves-effect waves-light">
+                        <a href=""> <!--auth-normal-sign-in.html-->
+                            <i class="ti-layout-sidebar-left"></i> Logout
+                        </a>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </nav>
+
+          <div class="pcoded-main-container">
+            <div class="pcoded-wrapper">
+              <nav class="pcoded-navbar">
+                <div class="sidebar_toggle"><a href="#" ><i class="icon-close icon"></i></a></div>
+                <div class="pcoded-inner-navbar main-menu">
+                  <div class="">
+                    <div class="main-menu-header">
+                      <img class="img-80 img-radius" src="images/avatar-4.jpg" alt="User-Profile-Image">
+                      <div class="user-details">
+                          <span id="more-details">John Doe<i class="fa fa-caret-down"></i></span>
+                      </div>
+                    </div>
+                    <div class="main-menu-content">
+                      <ul>
+                        <li class="more-details">
+                            <!--user-profile.html-->
+                            <a href=""><i class="ti-user"></i>View Profile</a>
+                            <a href="#!"><i class="ti-settings"></i>Settings</a>
+                            <!--auth-normal-sign-in.html-->
+                            <a href=""><i class="ti-layout-sidebar-left"></i>Logout</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <ul class="pcoded-item pcoded-left-item">
+                    <li class="active">
+                      <!--index.html-->
+                      <a href="/tulisPesan" class="waves-effect waves-dark">
+                        <span class="pcoded-micon"><i class="far fa-envelope text-c-white f-15"></i><b></b></span>
+                        <span class="pcoded-mtext">Tulis Pesan</span>
+                        <span class="pcoded-mcaret"></span>
+                      </a>
+                    </li>
+                    <li class="">
+                      <!--index.html-->
+                      <a href="/pesanMasuk" class="waves-effect waves-dark">
+                        <span class="pcoded-micon"><i class="far fa-envelope-open text-c-white f-15"></i><b></b></span>
+                        <span class="pcoded-mtext">Pesan Masuk</span>
+                        <span class="pcoded-mcaret"></span>
+                      </a>
+                    </li>
+                    <li class="">
+                      <!--index.html-->
+                      <a href="/pesanTerkirim" class="waves-effect waves-dark">
+                        <span class="pcoded-micon"><i class="fas fa-angle-double-right text-c-white f-15"></i><b></b></span>
+                        <span class="pcoded-mtext">Pesan Terkirim</span>
+                        <span class="pcoded-mcaret"></span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </nav>
+              <div class="pcoded-content">
+                <!--Page Header start-->
+                <div class="page-header">
+                  <div class="page-block">
+                    <div class="row align-items-center">
+                      <div class="col-md-8">
+                        <div class="page-header-title">
+                          <h5 class="m-b-10">Tulis Pesan</h5>
+                          
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <ul class="breadcrumb">
+                          <li class="breadcrumb-item">
+                            <a href="/"><i class="fa fa-home"></i></a> <!--index.htlm-->
+                          </li>
+                          <li class="breadcrumb-item">Tulis Pesan</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!--Page Header end-->
+                <div class="pcoded-inner-content">
+                  <div class="main-body">
+                    <div class="page-wrapper">
+                      <div class="page-body">
+                        <div class="row">
+                          <div class="col-sm-12">
+                            <div class="card">
+                              <div class="card-header">
+                                <h5>Welcome</h5>
+                                <span>Selamat datang di website simulasi enkripsi pesan text 
+                                menggunakan AES128 dan ECC</span>
+                                <div class="card-header-right">
+                                  <ul class="list-unstyled card-option">
+                                    <li>
+                                      <i class="fa fa fa-wrench open-card-option"></i>
+                                    </li>
+                                    <li>
+                                      <i class="fa fa-window-maximize full-card"></i>
+                                    </li>
+                                    <li>
+                                      <i class="fa fa-minus minimize-card"></i>
+                                    </li>
+                                    <li>
+                                      <i class="fa fa-refresh reload-card "></i>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </div>
+                              <div class="card-block">
+                                <form method="POST" action="/tulisPesan">
+                                  <div class="form-group">
+                                    <label for="formGroupkepada">Kepada</label>
+                                    <input type="email" name="kepada_message" class="form-control" id="formGroupkepada" placeholder="Email Penerima"  required="required">
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="formGroupsubjek">Subjek</label>
+                                    <input type="text" name="subjek_message" class="form-control" id="formGroupsubjek" placeholder="Subjek"  required="required">
+                                  </div>
+                                  <div class="form-group">
+                                    <label for="message">Message</label>
+                                    <input name="text_message" id="text_message" type="hidden" >
+                                    <div id="Quilleditor" style="height: 130px;">
+                                    </div>
+                                  </div>
+                                  <div class="form-group">
+                                    <button type="submit" class="btn btn-outline-primary">Kirim</button>
+                                  </div>
+                                </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div id="styleSelector"></div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <% include templates/footer.ejs %>
+    
+    <script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
+    <script>
+      var quill = new Quill('#Quilleditor', {
+        placeholder: 'Message Here!...',
+        theme: 'snow'
+      });
+      var form = document.querySelector('form');
+      form.onsubmit = function() {
+        console.log('submit', JSON.stringify(quill.root.innerHTML));
+        const msg = JSON.stringify(quill.root.innerHTML);
+        document.getElementById('text_message').value = msg;
+        // // Populate hidden form on submit
+        // var text_message = document.querySelector('input[name=text_message]');
+        // text_message.value = JSON.stringify(quill.getContents());
+        
+        // console.log("Submitted", $(form).serialize(), $(form).serializeArray());
+        
+        //   // No back end to actually submit to!
+        // alert('Open the console to see the submit data!')
+        // return false;
+      };
+    </script>
+    <script type="text/javascript" src="js/dcounts-js.min.js "></script>
+    <script>
+      dCounts('formGroupsubjek', 20);
+    </script>
+  </body>
+</html>
