@@ -31,6 +31,7 @@ function insertRecordsignUp(req, res) {
 
 exports.pesanmasuk = (req, res)=>{
   usersMessage.find((err, docs) => {
+    docs = docs.reverse();
     if(!err){
       res.render('pesanMasuk', {
         title: 'Pesan masuk', msg: docs
