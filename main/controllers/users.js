@@ -33,7 +33,7 @@ exports.pesanmasuk = (req, res)=>{
   usersMessage.find((err, docs) => {
     if(!err){
       res.render('pesanMasuk', {
-        title: 'Pesan masuk', pesan: docs
+        title: 'Pesan masuk', msg: docs
       });
     }else{
       console.log('Error Get Data : ' + err);

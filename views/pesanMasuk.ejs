@@ -278,19 +278,19 @@
                                     </tr>
                                   </thead>
                                   <tbody>
-                                    <% if(pesan.length){
+                                    <% if(msg.length){
 
-                                      for(var i = 0;i < pesan.length;i++) { %>
+                                      msg.forEach(function(msgs){ %>
                                     <tr>
-                                      <td><%=pesan[i].kepada_message%></td>
-                                      <td><%=pesan[i].subjek_message%></td>
-                                      <td><%=pesan[i].text_message%></td>
+                                      <td><%=msgs.kepada_message%></td>
+                                      <td><%=msgs.subjek_message%></td>
+                                      <td><%=msgs.text_message%></td>
                                       <td>
                                         <a href=""><i class="fa fa-pencil fa-lg"></i></a>
                                         <a href=""><i class="fa fa-trash fa-lg"></i></a>
                                       </td>
                                     </tr>
-                                    <% }
+                                    <% });
                                   }else{ %>
                                     <tr>
                                       <td colspan="3">No Message</td>

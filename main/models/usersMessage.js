@@ -1,7 +1,6 @@
 var mongoose = require('mongoose');
 var crypto = require('crypto');
 // var encDec = require('../../encANDdec');
-var IV = crypto.randomBytes(16);
 
 var Schema = mongoose.Schema;
 
@@ -13,7 +12,8 @@ var userMessage = new Schema({
 });
 
 
-// console.log(test);
+
+var IV = crypto.randomBytes(16);
 
 // initialization curve for alice and bob
 const alice = crypto.createECDH('secp128r1');
@@ -70,10 +70,10 @@ function decrypt(MESSAGE) {
         
         // console.log("Decrypted Message : ", decrypted);
 
-        return decrypted.toString();
+        return decrypted.toString('utf8');
         
         } catch (error) {
-            console.log(error.message);
+            console.log('Cannot retrive Data : '+error.message);
         }
     }
 module.exports = mongoose.model('message_data', userMessage);

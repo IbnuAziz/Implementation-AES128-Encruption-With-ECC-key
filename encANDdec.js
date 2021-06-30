@@ -2,7 +2,7 @@ const crypto = require('crypto');
 const algorithm = 'aes-128-gcm';
 const iv = crypto.randomBytes(16);
 
-let msg = 'a';
+let msg = 'aku anak soleh';
 
 
 const alice = crypto.createECDH('secp128r1');
@@ -28,37 +28,39 @@ let auth_tag;
 let encrypted;
 
 function encrypt(msg) {
-        let chiper = crypto.createCipheriv(algorithm, Buffer.from(aliceSharedKey, 'hex'), iv);
-        encrypted = chiper.update(msg, 'utf-8', 'hex');
-        encrypted += chiper.final('hex');
+        let chiper = crypto.createCipheriv(algorithm, Buffer.from(aliceSharedKey), iv);
+        let encrypted = chiper.update(msg);
+        encrypted = Buffer.concat([chiper.final()]);
 
         auth_tag = chiper.getAuthTag().toString('hex');
 
-        console.table({
+        return{
             IV: iv.toString('hex'),
-            encrypted: encrypted,
-            auth_tag: auth_tag
-        });
-        return encrypted.toString();
+            encrypted: encrypted.toString('hex')
+            // auth_tag: auth_tag
+        };
+        // return encrypted.toString();
 }
 
 function decrypt(msg) {
-    try {
+    // try {
+        let iv = Buffer.from(msg.iv, 'hex');
+        let encryptedText = Buffer.from(msg.encrypted, 'hex');
 
-        const dechiper = crypto.createDecipheriv(algorithm, Buffer.from(bobSharedKey, 'hex'), iv);
+        let dechiper = crypto.createDecipheriv(algorithm, Buffer.from(bobSharedKey), iv);
         
-        dechiper.setAuthTag(Buffer.from(auth_tag, 'hex'));
+        // dechiper.setAuthTag(Buffer.from(auth_tag, 'hex'));
         
         // dechiper.setAuthTag(crypto.randomBytes(16));
         
-        let decrypted = dechiper.update(encrypted, 'hex', 'utf8');
-        decrypted += dechiper.final('utf8');
+        let decrypted = dechiper.update(encryptedText);
+        decrypted = Buffer.concat([decrypted, dechiper.final()])
         
         return decrypted.toString();
-        
-        } catch (error) {
-            console.log(error.message);
-        }
+
+        // } catch (error) {
+        //     console.log(error.message);
+    // }
 }
 
 var test = encrypt(msg)
