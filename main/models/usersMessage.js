@@ -1,12 +1,14 @@
 var mongoose = require('mongoose');
 var crypto = require('crypto');
+// var encDec = require('../../encANDdec');
+var IV = crypto.randomBytes(16);
 
 var Schema = mongoose.Schema;
 
 var userMessage = new Schema({
     kepada_message : {type : String, required: true},
     subjek_message : {type : String, required: true},
-    text_message : {type : String, get: decrypt}  
+    text_message : {type : String, get: decrypt, set: encrypt}  
     // get: decrypt, set: encrypt
 });
 
@@ -33,21 +35,24 @@ console.log('isEqual? : ',aliceSharedKey === bobSharedKey);
 console.log('Alice shared key : ', aliceSharedKey);
 console.log('Bob shared key : ', bobSharedKey);
 
+let auth_tag;
+let encrypted;
 
 function encrypt(MESSAGE) {
-    const IV = crypto.randomBytes(16);
     const chiper = crypto.createCipheriv('aes-128-gcm', Buffer.from(aliceSharedKey, 'hex'), IV);
     
-    let encrypted = chiper.update(MESSAGE, 'utf8','hex');
+    encrypted = chiper.update(MESSAGE, 'utf8','hex');
     encrypted += chiper.final('hex');
     
-    const auth_tag = chiper.getAuthTag().toString('hex');
+    auth_tag = chiper.getAuthTag().toString('hex');
 
     console.table({
         IV: IV.toString('hex'),
         encrypted: encrypted,
         auth_tag: auth_tag
     });
+    
+    return encrypted.toString();
 }
 
 function decrypt(MESSAGE) {
@@ -63,7 +68,9 @@ function decrypt(MESSAGE) {
         let decrypted = dechiper.update(encrypt, 'hex', 'utf8');
         decrypted += dechiper.final('utf8');
         
-        console.log("Decrypted Message : ", decrypted);
+        // console.log("Decrypted Message : ", decrypted);
+
+        return decrypted.toString();
         
         } catch (error) {
             console.log(error.message);
