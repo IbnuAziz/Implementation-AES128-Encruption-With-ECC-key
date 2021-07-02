@@ -6,6 +6,7 @@ var Schema = mongoose.Schema;
 
 var userMessage = new Schema({
     kepada_message : {type : String, required: true},
+    cc_message :{type : String, required: true},
     subjek_message : {type : String, required: true},
     text_message : {type : String,  set: encrypt}  
     // get: decrypt, set: encrypt

@@ -44,7 +44,7 @@ app.use(express.static(path.join(__dirname, 'assets')));
 app.use('/', homeRouter);
 app.use('/', usersRouter);
 app.use('/signUp', usersRouter);
-app.use('/tulisPesan', usersRouter);
+app.use('/pesanMasuk', usersRouter);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

@@ -8,6 +8,10 @@ exports.signUp = (req, res)=>{
   res.render('signUp', {title: 'Register Users'});
 };
 
+exports.homeTwo = (req, res)=>{
+  res.render('home_two', {title: 'Home Two'});
+};
+
 exports.signUp_save = (req, res, next) => {
   insertRecordsignUp(req, res);
 }
@@ -42,11 +46,15 @@ exports.pesanmasuk = (req, res)=>{
   })
 };
 
+exports.modalbody = (req, res)=>{
+  res.render('modalBody');
+};
+
 exports.tulispesan = (req, res)=>{
   res.render('tulisPesan', {title: 'Tulis Pesan'});
 };
 
-exports.tulispesan_save = (req, res) => {
+exports.pesanmasuk_save = (req, res) => {
   insertRecordmessage(req, res);
 }
 
@@ -54,12 +62,13 @@ function insertRecordmessage(req, res) {
   var messageusers = new usersMessage();
 
   messageusers.kepada_message = req.body.kepada_message;
+  messageusers.cc_message = req.body.cc_message;
   messageusers.subjek_message = req.body.subjek_message;
   messageusers.text_message = req.body.text_message;
   
   messageusers.save((err, doc) => {
     if(!err){
-      res.redirect('tulisPesan/confirm');  
+      res.redirect('pesanMasuk/confirm');  
     }else{
       console.log('error : ' +err);
     }
