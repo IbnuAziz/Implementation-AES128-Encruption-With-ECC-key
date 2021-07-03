@@ -8,7 +8,10 @@ var userMessage = new Schema({
     kepada_message : {type : String, required: true},
     cc_message :{type : String, required: true},
     subjek_message : {type : String, required: true},
-    text_message : {type : String,  set: encrypt}  
+    text_message : {type : String,  set: encrypt},
+    createdAt : {type: Date, default:Date.now},
+    updateAt : {type: Date, default:Date.now},
+    isRead : {type:Boolean, default:false} 
     // get: decrypt, set: encrypt
 });
 
@@ -32,9 +35,9 @@ const aliceSharedKey = alice.computeSecret(bobPublicKeyBase64, 'base64', 'hex');
 const bobSharedKey = bob.computeSecret(alicePublicKeyBase64, 'base64', 'hex');
 
 // check alice and bob shared key are equal
-console.log('isEqual? : ',aliceSharedKey === bobSharedKey);
-console.log('Alice shared key : ', aliceSharedKey);
-console.log('Bob shared key : ', bobSharedKey);
+// console.log('isEqual? : ',aliceSharedKey === bobSharedKey);
+// console.log('Alice shared key : ', aliceSharedKey);
+// console.log('Bob shared key : ', bobSharedKey);
 
 let auth_tag;
 let encrypted;

@@ -8,9 +8,9 @@ exports.signUp = (req, res)=>{
   res.render('signUp', {title: 'Register Users'});
 };
 // Home two Get
-exports.homeTwo = (req, res)=>{
-  res.render('home_two', {title: 'Home Two'});
-};
+// exports.homeTwo = (req, res)=>{
+//   res.render('home_two', {title: 'Home Two'});
+// };
 // Sign Up POST
 exports.signUp_save = (req, res, next) => {
   insertRecordsignUp(req, res);
@@ -39,7 +39,8 @@ exports.pesanmasuk = (req, res)=>{
     docs = docs.reverse();
     if(!err){
       res.render('pesanMasuk', {
-        title: 'Pesan masuk', msg: docs
+        title: 'Pesan masuk', 
+        msg: docs,
       });
     }else{
       console.log('Error Get Data : ' + err);
@@ -56,7 +57,7 @@ exports.tulispesan = (req, res)=>{
 };
 // Pesan Masuk POST
 exports.pesanmasuk_save = (req, res) => {
-  insertRecordmessage(req, res);
+    insertRecordmessage(req, res);
 }
 
 // Function Pesan Masuk POST
@@ -70,12 +71,22 @@ function insertRecordmessage(req, res) {
   
   messageusers.save((err, doc) => {
     if(!err){
-      res.redirect('pesanMasuk/confirm');  
+      res.redirect('/');  
     }else{
       console.log('error : ' +err);
     }
   })
 }
+
+// function updateRecord(req, res) {
+//   usersMessage.findOneAndUpdate({_id: usersMessage._id}, req.body, {new: true}, (err, doc) => {
+//     if(!err){
+//       res.redirect('bacaPesan/:id');
+//     }else{
+//       console.log('Error Find And update'+ err);
+//     }
+//   });
+// }
 // Pesan Terkirim Get
 exports.pesanterkirim = (req, res)=>{
   res.render('pesanTerkirim', {title: 'Pesan Terkirim'});
@@ -85,3 +96,27 @@ exports.bacapesan = (req, res)=>{
   res.render('bacaPesan', {title: ' Baca Pesan'});
 };
 
+// Get Data By Id
+exports.bacapesan_byId = (req, res) => {
+  usersMessage.findById(req.params.id, (err, doc) => {
+    if(!err){
+      res.render('bacaPesan', {
+        title: 'Baca Pesan',
+        msg: doc
+      });
+    }
+    // if(!err){
+    //   res.status(200).json({
+    //     msg: doc,
+    //     request: {
+    //       type: 'GET',
+    //       url: 'http://localhost:300/bacaPesan'
+    //     }
+    //   });
+    // }else{
+    //   res.status(404).json({
+    //     message: 'No valid entry found for provided ID'
+    //   });
+    // }
+  });
+}

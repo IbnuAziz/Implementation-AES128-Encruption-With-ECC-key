@@ -254,21 +254,24 @@
 													</div>
 													<table class="table table-inbox table-hover table-sm" role="grid">
 														<tbody>
-                              								<% msg.forEach(function(msgs){ %>
-															<tr class="">
-																<td class="inbox-small-cells">
-																	<input type="checkbox" class="mail-checkbox">
-																</td>
-																<td class="inbox-small-cells"><i class="fa fa-star"></i></td>
-																<td class="view-message"><%=msgs.kepada_message%></td>
-																<td class="flex-message">
-                                								<%=msgs.subjek_message%> &nbsp;-&nbsp;
-                                								<span class="kep"><%=msgs.text_message%></span>
-																</td>
-																<!-- <td class="view-message  inbox-small-cells"><i class="fa fa-paperclip"></i></td> -->
-																<td class="view-message  text-right">9:27 AM</td>
-															</tr>
-                              								<% }); %>
+                              								
+															<% msg.forEach(function(msgs){ %>
+																<tr id="chat-list">
+																	<input type="hidden" name="id" id="" value="<%=msgs._id%>">
+																	<td style="display: none;"><%=msgs._id%></td>
+																	<td class="inbox-small-cells">
+																		<input type="checkbox" class="mail-checkbox">
+																	</td>
+																	<td class="inbox-small-cells"><i class="fa fa-star"></i></td>
+																	<td class="view-message"><%=msgs.kepada_message%></td>
+																	<td class="flex-message">
+																	<%=msgs.subjek_message%> &nbsp;-&nbsp;
+																	<span class="kep"><%=msgs.text_message%></span>
+																	</td>
+																	<!-- <td class="view-message  inbox-small-cells"><i class="fa fa-paperclip"></i></td> -->
+																	<td class="view-message  text-right"><%=msgs.createdAt%></td>
+																</tr>
+																<% }); %>
 														</tbody>
 													</table>
 													<!-- End Table Mail-->
@@ -288,6 +291,14 @@
 	<% include templates/footer.ejs %>
   <script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
   <script type="text/javascript" src="js/modalBody.js "></script>
-	<!--   <script type="text/javascript" src="js/modalEffect.js"></script> -->
+  <script>
+	$("#chat-list").click(function() {
+		var $row = $(this).closest("tr");    // Find the row
+		var $tds = $row.find("td");
+		$.each($tds, function() {
+			console.log($(this).text());
+		});
+	});
+  </script>
 </body>
 </html>

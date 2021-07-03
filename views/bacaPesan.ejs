@@ -202,25 +202,25 @@
                                                     <div class="heading-inbox row">
                                                         <div class="col-md-8">
                                                             <div class="compose-btn">
-                                                                <a class="btn btn-sm btn-primary" href="mail_compose.html"><i class="fa fa-reply"></i> Reply</a>
+                                                                <a class="btn btn-sm btn-primary" href=""><i class="fa fa-reply"></i> Reply</a>
                                                                 <button title="" data-placement="top" data-toggle="tooltip" type="button" data-original-title="Print" class="btn  btn-sm tooltips"><i class="fa fa-print"></i> </button>
                                                                 <button title="" data-placement="top" data-toggle="tooltip" data-original-title="Trash" class="btn btn-sm tooltips"><i class="fa fa-trash-o"></i></button>
                                                             </div>
-                      
                                                         </div>
+                                                        <input type="text" name="_id" value="<%=msg._id%>">
                                                         <div class="col-md-4 text-right">
-                                                            <p class="date"> 8:02 PM 12 FEB 2014</p>
+                                                            <p class="date"><%=msg.createdAt%></p>
                                                         </div>
                                                         <div class="col-md-12">
-                                                            <h4> Donec vitae leo at sem lobortis porttitor eu consequat risus. Mauris sed congue orci. Donec ultrices faucibus rutrum.</h4>
+                                                            <h4><%=msg.subjek_message%>.</h4>
                                                         </div>
                                                     </div>
                                                     <div class="sender-info">
                                                         <div class="row">
                                                             <div class="col-md-12">
                                                                 <img alt="" src="images/ava_profile.jpg">
-                                                                <strong>Mosaddek</strong>
-                                                                <span>[mosaddek73@gmail.com]</span>
+                                                                <strong><%=msg.kepada_message%></strong>
+                                                                <span>[<%=msg.cc%>]</span>
                                                                 to
                                                                 <strong>me</strong>
                                                                 <a class="sender-dropdown " href="javascript:;">
@@ -230,18 +230,15 @@
                                                         </div>
                                                     </div>
                                                     <div class="view-mail">
-                                                        <p>Faucibus rutrum. Phasellus sodales vulputate urna, vel accumsan augue egestas ac. Donec vitae leo at sem lobortis porttitor eu consequat risus. Mauris sed congue orci. Donec ultrices faucibus rutrum. Phasellus sodales vulputate urna, vel accumsan augue egestas ac. Donec vitae leo at sem lobortis porttitor eu consequat risus. Mauris sed congue orci. Donec ultrices faucibus rutrum. Phasellus sodales vulputate urna, vel accumsan augue egestas ac. Donec vitae leo at sem lobortis porttitor eu consequat risus. Mauris sed congue orci. </p>
-                                                        <p>Consequat risus. Mauris sed congue orci. Donec ultrices <a href="#">flatlab</a>. Phasellus sodales vulputate urna, vel accumsan augue egestas ac. Donec
-                                                            <a href="#">vitae leo at sem lobortis porttitor eu consequat risus</a>. Mauris sed congue orci. Donec ultrices faucibus rutrum. Phasellus sodales vulputate urna, vel accumsan augue egestas ac. Donec vitae leo at sem lobortis porttitor eu consequat risus. Mauris sed congue orci. </p>
-                                                        <p>Modales vulputate urna, vel <a href="#">thevectorlab.net</a>. Donec vitae leo at sem lobortis porttitor eu consequat risus. Mauris sed congue orci. Donec ultrices faucibus rutrum. Phasellus sodales vulputate urna, vel accumsan augue egestas ac. Donec vitae leo at sem lobortis porttitor eu consequat risus. Mauris sed congue orci. </p>
+                                                        <p><%=msg.text_message%></p>
                                                     </div>
                                                     <div class="compose-btn pull-left">
-                                                        <a class="btn btn-sm btn-primary" href="mail_compose.html"><i class="fa fa-reply"></i> Reply</a>
+                                                        <a class="btn btn-sm btn-primary" href=""><i class="fa fa-reply"></i> Reply</a>
                                                         <button class="btn btn-sm "><i class="fa fa-arrow-right"></i> Forward</button>
                                                         <button title="" data-placement="top" data-toggle="tooltip" type="button" data-original-title="Print" class="btn  btn-sm tooltips"><i class="fa fa-print"></i> </button>
                                                         <button title="" data-placement="top" data-toggle="tooltip" data-original-title="Trash" class="btn btn-sm tooltips"><i class="fa fa-trash-o"></i></button>
                                                     </div>
-                                                </div>
+                                                </div> 
 											</div>
 										</div>
 									</div>
