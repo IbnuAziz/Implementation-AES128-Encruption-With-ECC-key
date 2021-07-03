@@ -3,19 +3,20 @@ const signUpUsers = require('../models/usersSignUp');
 const usersMessage = require('../models/usersMessage');
 
 mongoose.set('useCreateIndex', true);
-
+// Sign Up Get
 exports.signUp = (req, res)=>{
   res.render('signUp', {title: 'Register Users'});
 };
-
+// Home two Get
 exports.homeTwo = (req, res)=>{
   res.render('home_two', {title: 'Home Two'});
 };
-
+// Sign Up POST
 exports.signUp_save = (req, res, next) => {
   insertRecordsignUp(req, res);
 }
 
+// Sign Up Funcrtion POST
 function insertRecordsignUp(req, res) {
   var signupusers = new signUpUsers();
 
@@ -32,7 +33,7 @@ function insertRecordsignUp(req, res) {
     }
   })
 }
-
+// Pesan Masuk Get Data From Database MongoDB
 exports.pesanmasuk = (req, res)=>{
   usersMessage.find((err, docs) => {
     docs = docs.reverse();
@@ -45,19 +46,20 @@ exports.pesanmasuk = (req, res)=>{
     }
   })
 };
-
+// Dynamic Modal Body Form Get
 exports.modalbody = (req, res)=>{
   res.render('modalBody');
 };
-
+// Tulis Pesan Get
 exports.tulispesan = (req, res)=>{
   res.render('tulisPesan', {title: 'Tulis Pesan'});
 };
-
+// Pesan Masuk POST
 exports.pesanmasuk_save = (req, res) => {
   insertRecordmessage(req, res);
 }
 
+// Function Pesan Masuk POST
 function insertRecordmessage(req, res) {
   var messageusers = new usersMessage();
 
@@ -74,8 +76,12 @@ function insertRecordmessage(req, res) {
     }
   })
 }
-
+// Pesan Terkirim Get
 exports.pesanterkirim = (req, res)=>{
   res.render('pesanTerkirim', {title: 'Pesan Terkirim'});
+};
+// Baca Pesan GET
+exports.bacapesan = (req, res)=>{
+  res.render('bacaPesan', {title: ' Baca Pesan'});
 };
 

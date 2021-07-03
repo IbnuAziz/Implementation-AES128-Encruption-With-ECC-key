@@ -8,6 +8,7 @@ router.get('/modalBody', usersController.modalbody);
 router.get('/pesanMasuk', usersController.pesanmasuk);
 router.get('/pesanTerkirim', usersController.pesanterkirim);
 router.get('/tulisPesan', usersController.tulispesan);
+router.get('/bacaPesan', usersController.bacapesan);
 router.get('/confirm', (req, res) => {
     res.json('confrim');
 });
