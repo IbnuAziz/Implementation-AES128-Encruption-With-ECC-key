@@ -1,3 +1,4 @@
+var crypto = require('crypto');
 
 var IV = crypto.randomBytes(16);
 
@@ -62,3 +63,7 @@ function decrypt(MESSAGE) {
             console.log('Cannot retrive Data : '+error.message);
         }
     }
+
+// module.exports = { enc: encrypt, dec: decrypt};
+exports.enc = encrypt;
+exports.dec = decrypt;

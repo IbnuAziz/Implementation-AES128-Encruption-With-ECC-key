@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var crypto = require('crypto');
-// var encDec = require('../../encANDdec');
+var encDec = require('../../encANDdec');
 
 var Schema = mongoose.Schema;
 
@@ -8,7 +8,7 @@ var userMessage = new Schema({
     kepada_message : {type : String, required: true},
     cc_message :{type : String, required: true},
     subjek_message : {type : String, required: true},
-    text_message : {type : String, set: encrypt},
+    text_message : {type : String, set: encDec.enc},
     createdAt : {type: Date, default:Date.now},
     updateAt : {type: Date, default:Date.now},
     isRead : {type:Boolean, default:false} 

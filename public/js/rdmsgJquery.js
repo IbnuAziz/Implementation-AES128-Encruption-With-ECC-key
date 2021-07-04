@@ -1,12 +1,12 @@
-// var encDec = require('../../main/models/usersMessage').decrypt();
+import * as encDec from '../../encANDdec';
 
+console.log(decrypt);
 $(function() {
     $("table tr").click(function(e) {
       var u = $(this).data("link");
       var t = $(this).data("target");
       console.log(u, t);
       if (t.length) {
-        // encDec.dec();
         console.log('w-open')
         window.open(u, t);
       } else {
@@ -14,7 +14,7 @@ $(function() {
         window.location.href = u;
       }
   });
-  
+  encDec.dec();
 });
 
   // 	$(function(){
