@@ -1,4 +1,4 @@
-var encDec = require('../../main/models/usersMessage').decrypt();
+// var encDec = require('../../main/models/usersMessage').decrypt();
 
 $(function() {
     $("table tr").click(function(e) {
@@ -6,7 +6,7 @@ $(function() {
       var t = $(this).data("target");
       console.log(u, t);
       if (t.length) {
-        encDec.dec();
+        // encDec.dec();
         console.log('w-open')
         window.open(u, t);
       } else {
