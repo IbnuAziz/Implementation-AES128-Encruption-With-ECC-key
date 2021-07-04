@@ -2,10 +2,10 @@
 <html>
 <head>
 	<% include templates/head.ejs %>
-	<link rel="stylesheet" type="text/css" href='css/home.css'>
+	<link rel="stylesheet" type="text/css" href='/css/home.css'>
 	<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet"> 
     <!--Dcounts-->
-    <link rel="stylesheet" type="text/css" href='css/dcounts.css'>
+    <link rel="stylesheet" type="text/css" href='/css/dcounts.css'>
 </head>
 <body>
 	<!-- Pre-loader start -->
@@ -74,7 +74,7 @@
 						</a>
 
 						<a href="#!">
-							<img class="img-fluid" src="images/logo.png" alt="Logo">
+							<img class="img-fluid" src="/images/logo.png" alt="Logo">
 						</a>
 						<a class="mobile-options waves-effect waves-light">
 							<i class="ti-more"></i>
@@ -105,7 +105,7 @@
 							<div class="">
 								<div class="user-head">
 									<a class="inbox-avatar" href="javascript:;">
-										<img  width="64" hieght="60" src="images/ava_profile.jpg">
+										<img  width="64" hieght="60" src="/images/ava_profile.jpg">
 									</a>
 									<div class="user-name">
 										<h5 id="more-details">Alireza Zare<i class="fa fa-chevron-down" id="dropmore"></i></h5>
@@ -194,7 +194,7 @@
 						<!--Page Header end-->
 						<div class="pcoded-inner-content">
 							<div class="main-body">
-								<div class="page-wrapper homePage">
+								<div class="page-wrapper">
 									<div class="page-body">
 										<div class="row">
 											<div class="col-sm-12">
@@ -202,15 +202,15 @@
                                                     <div class="heading-inbox row">
                                                         <div class="col-md-8">
                                                             <div class="compose-btn">
-                                                                <a class="btn btn-sm btn-primary" href=""><i class="fa fa-reply"></i> Reply</a>
-                                                                <button title="" data-placement="top" data-toggle="tooltip" type="button" data-original-title="Print" class="btn  btn-sm tooltips"><i class="fa fa-print"></i> </button>
+                                                                <a class="btn btn-sm" href="/pesanMasuk"><i class="fas fa-arrow-left" style="font-size: large;"></i></i></a>
                                                                 <button title="" data-placement="top" data-toggle="tooltip" data-original-title="Trash" class="btn btn-sm tooltips"><i class="fa fa-trash-o"></i></button>
                                                             </div>
                                                         </div>
-                                                        <input type="text" name="_id" value="<%=msg._id%>">
+                                                        <!-- <input type="text" name="_id" value="<%=msg._id%>"> -->
                                                         <div class="col-md-4 text-right">
                                                             <p class="date"><%=msg.createdAt%></p>
                                                         </div>
+														<hr/>
                                                         <div class="col-md-12">
                                                             <h4><%=msg.subjek_message%>.</h4>
                                                         </div>
@@ -218,9 +218,9 @@
                                                     <div class="sender-info">
                                                         <div class="row">
                                                             <div class="col-md-12">
-                                                                <img alt="" src="images/ava_profile.jpg">
+                                                                <img alt="" src="/images/ava_profile.jpg">
                                                                 <strong><%=msg.kepada_message%></strong>
-                                                                <span>[<%=msg.cc%>]</span>
+                                                                <span>[<%=msg.cc_message%>]</span>
                                                                 to
                                                                 <strong>me</strong>
                                                                 <a class="sender-dropdown " href="javascript:;">
@@ -235,7 +235,6 @@
                                                     <div class="compose-btn pull-left">
                                                         <a class="btn btn-sm btn-primary" href=""><i class="fa fa-reply"></i> Reply</a>
                                                         <button class="btn btn-sm "><i class="fa fa-arrow-right"></i> Forward</button>
-                                                        <button title="" data-placement="top" data-toggle="tooltip" type="button" data-original-title="Print" class="btn  btn-sm tooltips"><i class="fa fa-print"></i> </button>
                                                         <button title="" data-placement="top" data-toggle="tooltip" data-original-title="Trash" class="btn btn-sm tooltips"><i class="fa fa-trash-o"></i></button>
                                                     </div>
                                                 </div> 
@@ -253,7 +252,7 @@
 </div> 
 <% include templates/footer.ejs %>
 <script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
-<script type="text/javascript" src="js/modalBody.js "></script>
+<script type="text/javascript" src="/js/modalBody.js "></script>
 <!--   <script type="text/javascript" src="js/modalEffect.js"></script> -->
 </body>
 </html>

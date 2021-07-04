@@ -92,9 +92,9 @@ exports.pesanterkirim = (req, res)=>{
   res.render('pesanTerkirim', {title: 'Pesan Terkirim'});
 };
 // Baca Pesan GET
-exports.bacapesan = (req, res)=>{
-  res.render('bacaPesan', {title: ' Baca Pesan'});
-};
+// exports.bacapesan = (req, res)=>{
+//   res.render('bacaPesan', {title: ' Baca Pesan'});
+// };
 
 // Get Data By Id
 exports.bacapesan_byId = (req, res) => {

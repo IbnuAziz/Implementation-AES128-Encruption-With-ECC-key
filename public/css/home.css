@@ -1,5 +1,5 @@
 body {
-  color: #272727;
+  color:#797979;
   background: #f1f2f7;
   font-family: "Open Sans", sans-serif;
   padding: 0px !important;
@@ -9,6 +9,27 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-font-smoothing: antialiased;
 }
+
+/* hr {
+  border: 0;
+  clear:both;
+  display:block;
+  width: 97%;              
+  background-color:#ccbfbf82;
+  height: 1px;
+	box-shadow: 0 20px 20px -20px #333;
+} */
+
+hr {
+  border:none;
+ 	width: 97%;
+	height: 50px;
+	margin-top: 0;
+	border-bottom: 1px solid #ccbfbf82;
+	box-shadow: 0 5px 10px -10px #333;
+  margin: -50px auto 10px; 
+}
+
 
 .homePage {
   padding: 1.8rem;
@@ -66,7 +87,14 @@ body {
   z-index: 1025 !important;
   background-color: #000;
 }
-
+/*Inbox Style*/
+.heading-inbox h4 {
+  font-size: 18px;
+  color: #444;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  margin-top: 20px;
+}
 @media (min-width: 768px) {
   .modal-dialog {
     max-width: 600px !important;

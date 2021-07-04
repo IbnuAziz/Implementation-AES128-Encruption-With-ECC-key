@@ -1,10 +1,7 @@
-const crypto = require('crypto');
-const algorithm = 'aes-128-gcm';
-const iv = crypto.randomBytes(16);
 
-let msg = 'aku anak soleh';
+var IV = crypto.randomBytes(16);
 
-
+// initialization curve for alice and bob
 const alice = crypto.createECDH('secp128r1');
 alice.generateKeys();
 
@@ -20,51 +17,48 @@ const aliceSharedKey = alice.computeSecret(bobPublicKeyBase64, 'base64', 'hex');
 const bobSharedKey = bob.computeSecret(alicePublicKeyBase64, 'base64', 'hex');
 
 // check alice and bob shared key are equal
-console.log('isEqual? : ',aliceSharedKey === bobSharedKey);
-console.log('Alice shared key : ', aliceSharedKey);
-console.log('Bob shared key : ', bobSharedKey);
+// console.log('isEqual? : ',aliceSharedKey === bobSharedKey);
+// console.log('Alice shared key : ', aliceSharedKey);
+// console.log('Bob shared key : ', bobSharedKey);
 
 let auth_tag;
 let encrypted;
 
-function encrypt(msg) {
-        let chiper = crypto.createCipheriv(algorithm, Buffer.from(aliceSharedKey), iv);
-        let encrypted = chiper.update(msg);
-        encrypted = Buffer.concat([chiper.final()]);
+function encrypt(MESSAGE) {
+    const chiper = crypto.createCipheriv('aes-128-gcm', Buffer.from(aliceSharedKey, 'hex'), IV);
+    
+    encrypted = chiper.update(MESSAGE, 'utf8','hex');
+    encrypted += chiper.final('hex');
+    
+    auth_tag = chiper.getAuthTag().toString('hex');
 
-        auth_tag = chiper.getAuthTag().toString('hex');
-
-        return{
-            IV: iv.toString('hex'),
-            encrypted: encrypted.toString('hex')
-            // auth_tag: auth_tag
-        };
-        // return encrypted.toString();
+    console.table({
+        IV: IV.toString('hex'),
+        encrypted: encrypted,
+        auth_tag: auth_tag
+    });
+    
+    return encrypted.toString();
 }
 
-function decrypt(msg) {
-    // try {
-        let iv = Buffer.from(msg.iv, 'hex');
-        let encryptedText = Buffer.from(msg.encrypted, 'hex');
-
-        let dechiper = crypto.createDecipheriv(algorithm, Buffer.from(bobSharedKey), iv);
+function decrypt(MESSAGE) {
+    if (MESSAGE === null || typeof MESSAGE === 'undefined') {console.log('No Message')};
+    try {
+        const func = encrypt();
+        const dechiper = crypto.createDecipheriv('aes-128-gcm', Buffer.from(bobSharedKey, 'hex'), IV);
         
-        // dechiper.setAuthTag(Buffer.from(auth_tag, 'hex'));
+        dechiper.setAuthTag(Buffer.from(encrypt, 'hex'));
         
         // dechiper.setAuthTag(crypto.randomBytes(16));
         
-        let decrypted = dechiper.update(encryptedText);
-        decrypted = Buffer.concat([decrypted, dechiper.final()])
+        let decrypted = dechiper.update(encrypt, 'hex', 'utf8');
+        decrypted += dechiper.final('utf8');
         
-        return decrypted.toString();
+        // console.log("Decrypted Message : ", decrypted);
 
-        // } catch (error) {
-        //     console.log(error.message);
-    // }
-}
-
-var test = encrypt(msg)
-console.log('Encrypt : ' +test);
-console.log('Decrypt : ' +decrypt(test));
-
-module.exports = ({encrypt, decrypt});
+        return decrypted.toString('utf8');
+        
+        } catch (error) {
+            console.log('Cannot retrive Data : '+error.message);
+        }
+    }

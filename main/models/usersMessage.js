@@ -8,13 +8,12 @@ var userMessage = new Schema({
     kepada_message : {type : String, required: true},
     cc_message :{type : String, required: true},
     subjek_message : {type : String, required: true},
-    text_message : {type : String,  set: encrypt},
+    text_message : {type : String, set: encrypt},
     createdAt : {type: Date, default:Date.now},
     updateAt : {type: Date, default:Date.now},
     isRead : {type:Boolean, default:false} 
     // get: decrypt, set: encrypt
 });
-
 
 
 var IV = crypto.randomBytes(16);
@@ -59,7 +58,7 @@ function encrypt(MESSAGE) {
     return encrypted.toString();
 }
 
-function decrypt(MESSAGE) {
+userMessage.statics.decrypt = function decrypt(MESSAGE) {
     if (MESSAGE === null || typeof MESSAGE === 'undefined') {console.log('No Message')};
     try {
         const func = encrypt();
@@ -80,4 +79,7 @@ function decrypt(MESSAGE) {
             console.log('Cannot retrive Data : '+error.message);
         }
     }
-module.exports = mongoose.model('message_data', userMessage);
+
+
+var usermessage = mongoose.model('message_data', userMessage);
+module.exports = usermessage;
