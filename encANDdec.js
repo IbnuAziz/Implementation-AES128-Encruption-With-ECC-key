@@ -48,6 +48,7 @@ function decrypt(MESSAGE) {
         const func = encrypt();
         const dechiper = crypto.createDecipheriv('aes-128-gcm', Buffer.from(bobSharedKey, 'hex'), IV);
         
+        console.log(dechiper);
         dechiper.setAuthTag(Buffer.from(encrypt, 'hex'));
         
         // dechiper.setAuthTag(crypto.randomBytes(16));

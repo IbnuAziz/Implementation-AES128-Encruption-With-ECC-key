@@ -13,7 +13,7 @@ var userMessage = new Schema({
     updateAt : {type: Date, default:Date.now},
     isRead : {type:Boolean, default:false} 
     // get: decrypt, set: encrypt
-});
+}, {collection: 'message_users'});
 
 
 var IV = crypto.randomBytes(16);

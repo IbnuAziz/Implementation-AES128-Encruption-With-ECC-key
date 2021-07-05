@@ -1,6 +1,5 @@
-import * as encDec from '../../encANDdec';
+// import * as encDec from '../../encANDdec';
 
-console.log(decrypt);
 $(function() {
     $("table tr").click(function(e) {
       var u = $(this).data("link");
@@ -14,7 +13,6 @@ $(function() {
         window.location.href = u;
       }
   });
-  encDec.dec();
 });
 
   // 	$(function(){

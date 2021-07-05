@@ -2,11 +2,17 @@ var createError = require('http-errors');
 var express = require('express');
 var bodyParser = require('body-parser');
 var path = require('path');
+const passport = require('passport');
+const flash = require('connect-flash');
+const session = require('express-session');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var homeRouter = require('./main/routers/home');
 var usersRouter = require('./main/routers/users');
+
+// Passport Config
+require('./config/passport')(passport);
 
 var app = express();
 
@@ -16,7 +22,7 @@ var mongoose = require('mongoose');
 
 var mongoString = "mongodb+srv://EnkripsiAES128:enkripsiAES128@cluster0.3yt2b.gcp.mongodb.net/EnkripsiAES128?retryWrites=true&w=majority"
 
-mongoose.connect(mongoString, {useNewUrlParser: true})
+mongoose.connect(mongoString, {useNewUrlParser: true, useUnifiedTopology: true})
 
 mongoose.connection.on("error", function(error) {
   console.log(error)
@@ -40,6 +46,31 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'assets')));
+
+// Express Session 
+app.use(
+  session({
+    secret: '@#$%^aksdasaslkdasdaklsdlaskdasdjldaAKLSALSDalaksda',
+    resave: true,
+    saveUninitialized: true
+  })
+)
+
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+//Connect Flash
+app.use(flash());
+
+// Global variables
+app.use(function(req, res, next) {
+  res.locals.success_msg = req.flash('success_msg');
+  res.locals.error_msg = req.flash('error_msg');
+  res.locals.error = req.flash('error');
+  next();
+});
+
 
 app.use('/', homeRouter);
 app.use('/', usersRouter);

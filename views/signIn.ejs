@@ -2,10 +2,10 @@
 <html lang="en">
 
 <head>
-    <%- include ./templates/head.ejs %>
+    <% include templates/head.ejs %>
 </head>
 
-  <body class="theme" themebg-pattern="theme1">
+  <body class= "theme" themebg-pattern="theme1">
   <!-- Pre-loader start -->
   <div class="theme-loader">
       <div class="loader-track">
@@ -60,71 +60,49 @@
       </div>
   </div>
   <!-- Pre-loader end -->
-  <section class="login-block">
+
+    <section class="login-block">
         <!-- Container-fluid starts -->
-        <div class="container-fluid">
+        <div class="container">
             <div class="row">
                 <div class="col-sm-12">
-                    <form class="md-float-material form-material" action="/signUp" method="POST">
-                        <div class="text-center"> 
-                            <img src="images/logo.png" alt="logo.png">
-                        </div>
+                    <!-- Authentication card start -->
+
+                        <form class="md-float-material form-material" method="POST" action="/signIn">
+                            <div class="text-center">
+                                <img src="/images/logo.png" alt="logo.png">
+                            </div>
                             <div class="auth-box card">
                                 <div class="card-block">
                                     <div class="row m-b-20">
                                         <div class="col-md-12">
-                                            <h3 class="text-center txt-primary">Register</h3>
+                                            <h3 class="text-center">Sign In</h3>
                                         </div>
                                     </div>
                                     <%- include ./partials/errMessage.ejs %>
-                                    <div class="row">
-                                        <div class="col-sm-6">
-                                            <div class="form-group form-primary">
-                                                <input 
-                                                type="text" 
-                                                name="first_name" 
-                                                class="form-control" 
-                                                value="<%= typeof first_name != 'undefined' ? first_name : '' %>"
-                                                />
-                                                <span class="form-bar"></span>
-                                                <label class="float-label">First Name</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <div class="form-group form-primary">
-                                                <input 
-                                                type="text" 
-                                                name="last_name" 
-                                                class="form-control"
-                                                value="<%= typeof last_name != 'undefined' ? last_name : '' %>"
-                                                />
-                                                <span class="form-bar"></span>
-                                                <label class="float-label">Last Name</label>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <div class="form-group form-primary">
-                                        <input 
-                                        type="email" 
-                                        name="email" 
-                                        class="form-control"
-                                        value="<%= typeof email != 'undefined' ? email : '' %>"
-                                        />
+                                        <input type="text" name="email" class="form-control">
                                         <span class="form-bar"></span>
                                         <label class="float-label">Your Email Address</label>
                                     </div>
                                     <div class="form-group form-primary">
-                                        <input 
-                                        type="password" 
-                                        name="password" 
-                                        class="form-control" 
-                                        value="<%= typeof password != 'undefined' ? password : '' %>"/>
+                                        <input type="password" name="password" class="form-control">
                                         <span class="form-bar"></span>
                                         <label class="float-label">Password</label>
                                     </div>
+                                    <div class="row m-t-25 text-left">
+                                        <div class="col-12">
+                                            <div class="checkbox-fade fade-in-primary d-">
+                                                
+                                            </div>
+                                            <div class="forgot-phone text-right f-right">
+                                                <a href="" class="text-right f-w-600"> Forgot Password?</a>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="row m-t-30">
                                         <div class="col-md-12">
-                                            <button type="submit" class="btn btn-primary btn-md btn-block waves-effect text-center m-b-20">Sign up now</button>
+                                            <button type="submit" class="btn btn-primary btn-md btn-block waves-effect waves-light text-center m-b-20">Sign in</button>
                                         </div>
                                     </div>
                                     <hr/>
@@ -134,12 +112,13 @@
                                             <p class="text-inverse text-left"><a href="/"><b>Back to website</b></a></p>
                                         </div>
                                         <div class="col-md-2">
-                                            <img src="images/auth/Logo-small-bottom.png" alt="small-logo.png">
+                                            <img src="/images/auth/Logo-small-bottom.png" alt="small-logo.png">
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                    </form>
+                        </form>
+                        <!-- end of form -->
                 </div>
                 <!-- end of col-sm-12 -->
             </div>
@@ -147,8 +126,9 @@
         </div>
         <!-- end of container-fluid -->
     </section>
-    <%- include ./templates/footer.ejs %>
-<script type="text/javascript" src="js/common-pages.js"></script>
+<!-- Required Jquery -->
+<% include templates/footer.ejs %>
+<script type="text/javascript" src="/js/common-pages.js"></script>
 </body>
 
 </html>

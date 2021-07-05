@@ -1,38 +1,116 @@
 const mongoose = require('mongoose');
+var bcrypt = require('bcryptjs');
+const passport = require('passport');
+
 const signUpUsers = require('../models/usersSignUp');
 const usersMessage = require('../models/usersMessage');
+const usersSignUp = require('../models/usersSignUp');
 
 mongoose.set('useCreateIndex', true);
-// Sign Up Get
+// Sign In GET
+exports.signIn = (req, res)=>{
+  res.render('signIn', {title: 'Login Users'});
+};
+
+// Sign In POST
+exports.signIn_post = (req, res, next)=>{
+  passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: 'signIn',
+    failureFlash: true
+  })(req, res, next);
+};
+
+// Sign Up GET
 exports.signUp = (req, res)=>{
   res.render('signUp', {title: 'Register Users'});
 };
-// Home two Get
-// exports.homeTwo = (req, res)=>{
-//   res.render('home_two', {title: 'Home Two'});
-// };
+
 // Sign Up POST
 exports.signUp_save = (req, res, next) => {
   insertRecordsignUp(req, res);
 }
 
-// Sign Up Funcrtion POST
-function insertRecordsignUp(req, res) {
-  var signupusers = new signUpUsers();
+// Alternative SignUp function POST
+function insertRecordsignUp (req, res) {
+  const { first_name, last_name, email, password } = req.body;
+  
+  let errors = [];
+  
+  if (!first_name || !last_name || !email || !password) {
+    errors.push({ msg: 'Please enter all fields' });
+  }
+  
 
-  signupusers.first_name = req.body.first_name;
-  signupusers.last_name = req.body.last_name;
-  signupusers.email = req.body.email;
-  signupusers.password = req.body.password;
-
-  signupusers.save((err, doc) => {
-    if(!err){
-      res.redirect('signUp/confirm');  
-    }else{
-      console.log('error : ' +err);
-    }
-  })
+  if (password.length < 6) {
+    errors.push({ msg: 'Password must be at least 6 characters' });
+  }
+  if (errors.length > 0) {
+    res.render('signUp', {
+      title: 'Register Users',
+      errors,
+      first_name,
+      last_name,
+      email,
+      password
+    });
+  }else {
+    usersSignUp.findOne({ email: email }).then(signup_users => {
+      if (signup_users) {
+        errors.push({ msg: 'Email already exists' });
+        res.render('signUp', {
+          title: 'Register Users',
+          errors,
+          first_name,
+          last_name,
+          email,
+          password
+        });
+      }else {
+        const signupusers = new signUpUsers({
+          first_name,
+          last_name,
+          email,
+          password
+        });
+          bcrypt.genSalt(10, (err, salt) => {
+          bcrypt.hash(signupusers.password, salt, (err, hash) => {
+            if (err) throw err;
+            signupusers.password = hash;
+            signupusers
+              .save()
+              .then(signup_users => {
+                req.flash(
+                  'success_msg',
+                  'You are now registered and can log in'
+                );
+                res.redirect('signIn');
+              })
+              .catch(err => console.log(err));
+          });
+        });
+      }
+    });
+  }
 }
+// Sign Up Funcrtion POST
+// function insertRecordsignUp(req, res) {
+//   var signupusers = new signUpUsers();
+
+//   signupusers.first_name = req.body.first_name;
+//   signupusers.last_name = req.body.last_name;
+//   signupusers.email = req.body.email;
+//   signupusers.password = req.body.password;
+
+//   signupusers.save((err, doc) => {
+//     if(!err){
+//       res.redirect('signUp/confirm');  
+//     }else{
+//       console.log('error : ' +err);
+//     }
+//   })
+// }
+
 // Pesan Masuk Get Data From Database MongoDB
 exports.pesanmasuk = (req, res)=>{
   usersMessage.find((err, docs) => {
@@ -120,3 +198,10 @@ exports.bacapesan_byId = (req, res) => {
     // }
   });
 }
+
+// Logout
+exports.logoutUsers = (req, res)=>{
+  req.logout();
+  req.flash('success_msg', 'You are logged out');
+  res.redirect('signIn');
+};

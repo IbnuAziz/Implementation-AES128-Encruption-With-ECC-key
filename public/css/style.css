@@ -6759,9 +6759,9 @@ table tbody .border-bottom-info td {
   transition: opacity 0.3s linear;
 }
 
-/*body[themebg-pattern="theme1"] {
+body.theme[themebg-pattern="theme1"] {
 	background-color: #448aff;
-}*/
+}
 
 .pcoded .pcoded-navbar .pcoded-header[header-theme="theme1"] {
   color: #fff;
@@ -11656,9 +11656,9 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child:before {
 }
 
 .alert-warning {
-  background-color: #fff;
-  border-color: #ffe100;
-  color: #ffe100;
+  color: #664d03;
+  background-color: #fff3cd;
+  border-color: #ffecb5;
 }
 
 .alert-danger {
