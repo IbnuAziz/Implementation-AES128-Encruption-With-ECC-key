@@ -8,6 +8,8 @@ const session = require('express-session');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+
+
 var homeRouter = require('./main/routers/home');
 var usersRouter = require('./main/routers/users');
 
@@ -19,6 +21,8 @@ var app = express();
 // Mongoose Connection
 
 var mongoose = require('mongoose');
+
+mongoose.Promise = global.Promise;
 
 var mongoString = "mongodb+srv://EnkripsiAES128:enkripsiAES128@cluster0.3yt2b.gcp.mongodb.net/EnkripsiAES128?retryWrites=true&w=majority"
 
@@ -47,12 +51,17 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'assets')));
 
+app.use(function(req,res,next){
+  res.locals.currentUser = req.user;
+  next();
+})
+
 // Express Session 
 app.use(
   session({
     secret: '@#$%^aksdasaslkdasdaklsdlaskdasdjldaAKLSALSDalaksda',
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
   })
 )
 

@@ -1,19 +1,20 @@
 const mongoose = require('mongoose');
 var bcrypt = require('bcryptjs');
 const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
 
-const signUpUsers = require('../models/usersSignUp');
 const usersMessage = require('../models/usersMessage');
 const usersSignUp = require('../models/usersSignUp');
+const coba_use = require('../../test/coba');
 
 mongoose.set('useCreateIndex', true);
 // Sign In GET
-exports.signIn = (req, res)=>{
+exports.signIn = async (req, res)=>{
   res.render('signIn', {title: 'Login Users'});
 };
 
 // Sign In POST
-exports.signIn_post = (req, res, next)=>{
+exports.signIn_post = async (req, res, next)=>{
   passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: 'signIn',
@@ -22,17 +23,17 @@ exports.signIn_post = (req, res, next)=>{
 };
 
 // Sign Up GET
-exports.signUp = (req, res)=>{
+exports.signUp = async (req, res)=>{
   res.render('signUp', {title: 'Register Users'});
 };
 
 // Sign Up POST
-exports.signUp_save = (req, res, next) => {
+exports.signUp_save = async (req, res, next) => {
   insertRecordsignUp(req, res);
 }
 
 // Alternative SignUp function POST
-function insertRecordsignUp (req, res) {
+async function insertRecordsignUp (req, res) {
   const { first_name, last_name, email, password } = req.body;
   
   let errors = [];
@@ -55,8 +56,8 @@ function insertRecordsignUp (req, res) {
       password
     });
   }else {
-    usersSignUp.findOne({ email: email }).then(signup_users => {
-      if (signup_users) {
+    await usersSignUp.findOne({ email: email }).then(user => {
+      if (user) {
         errors.push({ msg: 'Email already exists' });
         res.render('signUp', {
           title: 'Register Users',
@@ -79,7 +80,7 @@ function insertRecordsignUp (req, res) {
             signupusers.password = hash;
             signupusers
               .save()
-              .then(signup_users => {
+              .then(user => {
                 req.flash(
                   'success_msg',
                   'You are now registered and can log in'
@@ -93,114 +94,166 @@ function insertRecordsignUp (req, res) {
     });
   }
 }
-// Sign Up Funcrtion POST
-// function insertRecordsignUp(req, res) {
-//   var signupusers = new signUpUsers();
 
-//   signupusers.first_name = req.body.first_name;
-//   signupusers.last_name = req.body.last_name;
-//   signupusers.email = req.body.email;
-//   signupusers.password = req.body.password;
-
-//   signupusers.save((err, doc) => {
-//     if(!err){
-//       res.redirect('signUp/confirm');  
-//     }else{
-//       console.log('error : ' +err);
-//     }
-//   })
-// }
-
+// Alternative Pesan Masuk Get From MongoDB
 // Pesan Masuk Get Data From Database MongoDB
-exports.pesanmasuk = (req, res)=>{
-  usersMessage.find((err, docs) => {
+exports.pesanmasuk = async (req, res)=>{
+  await usersMessage.find((err, docs) => {
     docs = docs.reverse();
     if(!err){
       res.render('pesanMasuk', {
         title: 'Pesan masuk', 
         msg: docs,
+        user : req.user
       });
     }else{
       console.log('Error Get Data : ' + err);
     }
   })
 };
+
 // Dynamic Modal Body Form Get
-exports.modalbody = (req, res)=>{
-  res.render('modalBody');
+exports.modalbody = async (req, res)=>{
+  res.render('modalBody', {
+    user : req.user
+  });
 };
+
 // Tulis Pesan Get
-exports.tulispesan = (req, res)=>{
+exports.tulispesan = async (req, res)=>{
   res.render('tulisPesan', {title: 'Tulis Pesan'});
 };
+
 // Pesan Masuk POST
-exports.pesanmasuk_save = (req, res) => {
+exports.pesanmasuk_save = async (req, res) => {
     insertRecordmessage(req, res);
 }
 
-// Function Pesan Masuk POST
-function insertRecordmessage(req, res) {
-  var messageusers = new usersMessage();
-
-  messageusers.kepada_message = req.body.kepada_message;
-  messageusers.cc_message = req.body.cc_message;
-  messageusers.subjek_message = req.body.subjek_message;
-  messageusers.text_message = req.body.text_message;
-  
-  messageusers.save((err, doc) => {
-    if(!err){
-      res.redirect('/');  
-    }else{
-      console.log('error : ' +err);
+// Alternative Pesan masuk Post
+async function insertRecordmessage(req, res) {
+  const {userId} = req.body;
+  await usersSignUp.findOne({email: req.body.cc_message})
+  .then(docs => {
+    if(!docs){
+        req.flash(
+        'error_msg',
+        'Unfortunately Your Message Cannot be Send Because Email Not Found'
+        );
+      res.redirect('/')
     }
+      // Create a new message
+      const newMessage = new usersMessage(req.body)
+      // get userId
+      const user = await usersSignUp.findById(userId)
+      // assign a message as a from
+      newMessage.from = user;
+      // save a message
+      await newMessage.save();
+      // add Message to the user messages array
+      user.messages.push(newMessage)
+      // save the user
+      await user.save();
+      
+      req.flash(
+        'success_msg',
+        'Message Send And Encrypted'
+      );
+      res.redirect('/')
+  }) 
+  .catch(err => {
+    res.status(500).json({
+      message: 'Message Sent Error',
+      error: err
+    })
   })
 }
 
-// function updateRecord(req, res) {
-//   usersMessage.findOneAndUpdate({_id: usersMessage._id}, req.body, {new: true}, (err, doc) => {
-//     if(!err){
-//       res.redirect('bacaPesan/:id');
-//     }else{
-//       console.log('Error Find And update'+ err);
-//     }
+// Coba Post
+exports.coba_post = async (req, res, next) => {
+  const {userId} = req.body;
+  // Create a new message
+  const newMessage = new coba_use(req.body);
+  console.log('messages', newMessage);
+  // get user
+  const user = await usersSignUp.findById(userId)
+  // assign a message as a from
+  newMessage.from = user;
+  // save a message
+  await newMessage.save();
+  // add Message to the user messages array
+  user.messages.push(newMessage)
+  // save the user
+  await user.save();
+
+  res.status(201).json({newMessage})
+}
+
+// Coba
+exports.coba_get = async (req, res) => {
+  const message = await coba_use.find()
+  res.render('coba', {
+      messages: message
+  });
+}
+
+
+// Pesan Masuk POST
+// function insertRecordmessage(req, res) {
+//   const {kepada_message, cc_message, subjek_message, text_message,from} = req.body;
+//   var messageusers = new usersMessage({
+//     kepada_message,
+//     cc_message ,
+//     subjek_message,
+//     text_message,
+//     from
 //   });
+//   usersSignUp.findOne({email: cc_message})
+//   .then(users => {
+//     if(!users){
+//       req.flash(
+//         'error_msg',
+//         'Unfortunately Your Message Cannot be Send Because Email Not Found'
+//       );
+//       res.redirect('/')
+//     }else{
+//       req.flash(
+//         'success_msg',
+//         'Message Send And Encrypted'
+//       );
+//       messageusers.save()
+//     }
+//     res.redirect('/')
+//     })
+//   .catch(err => {
+//     res.status(500).json({
+// 			message : 'Error In Email',
+// 			error: err
+//     })
+//   })
 // }
+
+
 // Pesan Terkirim Get
-exports.pesanterkirim = (req, res)=>{
+exports.pesanterkirim = async (req, res)=>{
   res.render('pesanTerkirim', {title: 'Pesan Terkirim'});
 };
-// Baca Pesan GET
-// exports.bacapesan = (req, res)=>{
-//   res.render('bacaPesan', {title: ' Baca Pesan'});
-// };
+
 
 // Get Data By Id
-exports.bacapesan_byId = (req, res) => {
+exports.bacapesan_byId = async (req, res) => {
   usersMessage.findById(req.params.id, (err, doc) => {
     if(!err){
       res.render('bacaPesan', {
         title: 'Baca Pesan',
-        msg: doc
+        msg: doc,
+        user : req.user,
       });
     }
-    // if(!err){
-    //   res.status(200).json({
-    //     msg: doc,
-    //     request: {
-    //       type: 'GET',
-    //       url: 'http://localhost:300/bacaPesan'
-    //     }
-    //   });
-    // }else{
-    //   res.status(404).json({
-    //     message: 'No valid entry found for provided ID'
-    //   });
-    // }
   });
 }
 
 // Logout
-exports.logoutUsers = (req, res)=>{
+exports.logoutUsers = async (req, res)=>{
   req.logout();
   req.flash('success_msg', 'You are logged out');
   res.redirect('signIn');

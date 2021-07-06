@@ -4,6 +4,8 @@ var router = express.Router();
 const usersController = require('../controllers/users');
 const { ensureAuthenticated,forwardAuthenticated } = require('../../config/auth');
 
+router.get('/coba',   usersController.coba_get);
+router.post('/coba/',  usersController.coba_post);
 router.get('/signUp', usersController.signUp);
 router.post('/signUp', usersController.signUp_save);
 router.get('/signIn', usersController.signIn);
@@ -16,7 +18,7 @@ router.get('/bacaPesan/:id', ensureAuthenticated, usersController.bacapesan_byId
 router.get('/confirm', (req, res) => {
     res.json('confrim');
 });
-router.post('/PesanMasuk', ensureAuthenticated, usersController.pesanmasuk_save);
+router.post('/pesanMasuk', ensureAuthenticated, usersController.pesanmasuk_save);
 router.get('/logout', usersController.logoutUsers);
 
 module.exports = router;
