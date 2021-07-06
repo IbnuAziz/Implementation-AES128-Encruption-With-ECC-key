@@ -132,15 +132,15 @@ exports.pesanmasuk_save = async (req, res) => {
 // Alternative Pesan masuk Post
 async function insertRecordmessage(req, res) {
   const {userId} = req.body;
-  await usersSignUp.findOne({email: req.body.cc_message})
-  .then(docs => {
-    if(!docs){
-        req.flash(
-        'error_msg',
-        'Unfortunately Your Message Cannot be Send Because Email Not Found'
-        );
-      res.redirect('/')
-    }
+  // await usersSignUp.findOne({email: req.body.cc_message})
+  // .then(docs => {
+  //   if(!docs){
+  //       req.flash(
+  //       'error_msg',
+  //       'Unfortunately Your Message Cannot be Send Because Email Not Found'
+  //       );
+  //     res.redirect('/')
+  //   }
       // Create a new message
       const newMessage = new usersMessage(req.body)
       // get userId
@@ -159,13 +159,13 @@ async function insertRecordmessage(req, res) {
         'Message Send And Encrypted'
       );
       res.redirect('/')
-  }) 
-  .catch(err => {
-    res.status(500).json({
-      message: 'Message Sent Error',
-      error: err
-    })
-  })
+  // }) 
+  // .catch(err => {
+  //   res.status(500).json({
+  //     message: 'Message Sent Error',
+  //     error: err
+  //   })
+  // })
 }
 
 // Coba Post
@@ -235,7 +235,10 @@ exports.coba_get = async (req, res) => {
 
 // Pesan Terkirim Get
 exports.pesanterkirim = async (req, res)=>{
-  res.render('pesanTerkirim', {title: 'Pesan Terkirim'});
+  res.render('pesanTerkirim', {
+    title: 'Pesan Terkirim',
+    user : req.user
+  });
 };
 
 

@@ -14,7 +14,7 @@ router.get('/modalBody', ensureAuthenticated, usersController.modalbody);
 router.get('/pesanMasuk', ensureAuthenticated, usersController.pesanmasuk);
 router.get('/pesanTerkirim', ensureAuthenticated, usersController.pesanterkirim);
 router.get('/tulisPesan', ensureAuthenticated, usersController.tulispesan);
-router.get('/bacaPesan/:id', ensureAuthenticated, usersController.bacapesan_byId);
+router.get('/bacaPesan/:id', forwardAuthenticated, usersController.bacapesan_byId);
 router.get('/confirm', (req, res) => {
     res.json('confrim');
 });
