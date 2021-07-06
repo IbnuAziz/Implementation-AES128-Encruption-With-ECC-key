@@ -5,7 +5,7 @@ const LocalStrategy = require('passport-local').Strategy;
 
 const usersMessage = require('../models/usersMessage');
 const usersSignUp = require('../models/usersSignUp');
-const coba_use = require('../../test/coba');
+const coba_use = require('../../test/models/coba');
 
 mongoose.set('useCreateIndex', true);
 // Sign In GET
