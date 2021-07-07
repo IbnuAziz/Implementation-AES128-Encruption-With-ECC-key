@@ -22,7 +22,7 @@ var UsersignUp = new Schema({
     },
     messages: [{
         type: Schema.Types.ObjectId, 
-        ref: 'coba_message'
+        ref: 'message_users'
     }],
 }, { collection: 'signup_users'});
 

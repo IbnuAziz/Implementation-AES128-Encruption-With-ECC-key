@@ -11,10 +11,10 @@ var userMessage = new Schema({
     text_message : {type : String, set: encDec.enc},
     createdAt : {type: Date, default:Date.now},
     updateAt : {type: Date, default:Date.now},
-    from :{
+    from :[{
         type: Schema.Types.ObjectId, 
-        ref: 'signup_data'
-    },
+        ref: 'signup_users'
+    }],
     isRead : {type:Boolean, default:false},
     // get: decrypt, set: encrypt
 }, {collection: 'message_users'});
