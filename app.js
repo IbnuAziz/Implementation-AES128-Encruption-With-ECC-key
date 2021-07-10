@@ -62,6 +62,7 @@ app.use(
     secret: '@#$%^aksdasaslkdasdaklsdlaskdasdjldaAKLSALSDalaksda',
     resave: true,
     saveUninitialized: true,
+    cookie: { maxAge: (10 * 60 * 1000) }
   })
 )
 

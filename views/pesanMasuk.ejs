@@ -255,23 +255,24 @@
 													</div>
 													<table class="table table-inbox table-hover table-sm" role="grid">
 														<tbody>
-                              								<% if(msg.length) { %>
+                              								<% if(data.length) { %>
 
-															<% msg.forEach(function(msgs){ %>
-																<tr id="chat-list" data-link="bacaPesan/<%=msgs.id%>" data-target="_SELF">
-																	<input type="hidden" name="id" id="" value="<%=msgs._id%>">
-																	<td style="display: none;"><%=msgs._id%></td>
+															<% data.forEach(function(msgs){ %>
+																<tr id="chat-list" name= "ids" data-link="bacaPesan/<%=msgs.id%>" data-target="_SELF">
+																	<!-- <input type="hidden" name="id" id="" value="<%=msgs._id%>"> -->
 																	<td class="inbox-small-cells">
 																		<input type="checkbox" class="mail-checkbox">
 																	</td>
-																	<td class="inbox-small-cells"><i class="fa fa-star"></i></td>
-																	<td class="view-message"><%=msgs.kepada_message%></td>
-																	<td class="flex-message">
-																	<%=msgs.subjek_message%> &nbsp; - &nbsp;
-																	<span class="kep"><%-msgs.text_message%></span>
+																	<td width="4%"><i class="fa fa-star"></i></td>
+																	<td width="10%"><%=msgs.first_name%><%=msgs.last_name%></td>
+																	<td width="6%">
+																	<div class="d-flex">
+																		<%=msgs.subjek_message%> &nbsp; - &nbsp;
+																		<span class="kep"><%-msgs.text_message%></span>
+																	</div>
 																	</td>
 																	<!-- <td class="view-message  inbox-small-cells"><i class="fa fa-paperclip"></i></td> -->
-																	<td class="view-message  text-right"><%=msgs.createdAt%></td>
+																	<td class="text-right" width="40%"><%=new Date(msgs.createdAt).toLocaleString()%></td>
 																</tr>
 																<% }); %>
 															<% }else { %>

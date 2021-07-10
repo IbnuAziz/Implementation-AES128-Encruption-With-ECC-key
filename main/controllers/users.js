@@ -5,6 +5,8 @@ const LocalStrategy = require('passport-local').Strategy;
 
 const usersMessage = require('../models/usersMessage');
 const usersSignUp = require('../models/usersSignUp');
+const { data } = require('jquery');
+const { find } = require('../models/usersMessage');
 
 mongoose.set('useCreateIndex', true);
 // Sign In GET
@@ -96,18 +98,37 @@ async function insertRecordsignUp (req, res) {
 
 // Alternative Pesan Masuk Get From MongoDB
 exports.pesanmasuk = async (req, res, next) => {
-  // const users = await usersMessage.find({'from': {$ne: req.user._id}})
-  // if(users){
-  //   res.render('pesanMasuk', {
-  //     title: 'Pesan masuk', 
-  //     msg: users,
-  //     user : req.user
-  //   });
-  // }else{
-  //   res.json({
-  //     message: 'Error'
-  //   })
-  // }
+  await usersMessage.aggregate([
+    { $match : {'dari' : {$ne: req.user._id}}},
+    { $lookup: { from: "signup_users", localField: "dari", foreignField: "_id", as: "results"  } },
+    {$unset:["kepada_message", "dari", "cc_message"]},
+    {
+      $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$results", 0 ] }, "$$ROOT" ] } }
+    },
+    {$unwind: "$results"}
+    // { $project: { results: 1 } }
+  ])
+  .exec((err, result)=>{
+    if(err){
+      next(err)
+    }
+    res.render('pesanMasuk', {
+      title: 'Pesan Masuk',
+      data : result.map(doc =>({
+        
+          id: doc._id,
+          subjek_message: doc.subjek_message,
+          text_message: doc.text_message,
+          email: doc.email,
+          first_name: doc.first_name,
+          last_name: doc.last_name,
+          createdAt: doc.createdAt,
+          isRead: doc.isRead 
+        
+      })),
+      user : req.user
+    })
+  })
 }
 // Pesan Masuk Get Data From Database MongoDB
 // exports.pesanmasuk = async (req, res)=>{
@@ -142,9 +163,11 @@ exports.pesanmasuk_save = async (req, res) => {
     insertRecordmessage(req, res);
 }
 
-// Alternative Pesan masuk Post
+// Alternative Pesan Masuk Post
+
+
+//Pesan masuk Post
 async function insertRecordmessage(req, res) {
-  const {userId} = req.body;
   await usersSignUp.findOne({email: req.body.cc_message}, 
     async function(err, docs){
       if(!docs){
@@ -157,9 +180,9 @@ async function insertRecordmessage(req, res) {
         // Create a new message
       const newMessage = new usersMessage(req.body)
       // get userId
-      const user = await usersSignUp.findByIdAndUpdate(userId)
-      // assign a message as a from
-      newMessage.from = user;
+      const user = await usersSignUp.findById(req.user._id)
+      // assign a message as a dari
+      newMessage.dari = user;
       // save a message
       await newMessage.save();
       // add Message to the user messages array
@@ -173,11 +196,7 @@ async function insertRecordmessage(req, res) {
       );
       res.redirect('/')
       }
-    res.status(500).json({
-      message: 'Cannot Send Message!',
-      error: err
-    })
-    throw err
+    if(err) throw err
   })
 
 }
@@ -219,16 +238,37 @@ exports.pesanterkirim = async (req, res)=>{
 };
 
 // Get Data By Id
-exports.bacapesan_byId = async (req, res) => {
-  await usersMessage.findById(req.params.id, (err, doc) => {
-    if(!err){
-      res.render('bacaPesan', {
-        title: 'Baca Pesan',
-        msg: doc,
-        user : req.user,
-      });
+exports.bacapesan_byId = async (req, res, next) => {
+  const ID = req.params;
+  await usersMessage.aggregate([
+    // IDS = messages.map((el)=>{return mongoose.Types.ObjectId(el)}),
+    { $match : {'dari' : {$ne: req.user._id}}},
+    { $lookup: { from: "signup_users", localField: "dari", foreignField: "_id", as: "message"  } },
+/*     {
+      $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$message", 0 ] }, "$$ROOT" ] } }
+    }, */
+    {$unset:["kepada_message", "dari", "cc_message", "message.password", "message.messages", "message._id"]},
+    {$unwind: "$message"}
+  ])
+  .exec((err, mess)=>{
+    if(err){
+      console.log(err)
     }
-  });
+
+    let itemMessage
+    mess.forEach(doc => {
+     if(doc._id == ID.id){
+      itemMessage = doc
+    }
+   })
+    
+    res.render('bacaPesan', {
+      title: 'Baca Pesan',
+      data : itemMessage,
+      user : req.user
+    })
+    console.log(itemMessage)
+  })
 }
 
 // Logout

@@ -208,21 +208,20 @@
                                                                 <button title="" data-placement="top" data-toggle="tooltip" data-original-title="Trash" class="btn btn-sm tooltips"><i class="fa fa-trash-o"></i></button>
                                                             </div>
                                                         </div>
-                                                        <!-- <input type="text" name="_id" value="<%=msg._id%>"> -->
                                                         <div class="col-md-4 text-right">
-                                                            <p class="date"><%=msg.createdAt%></p>
+                                                            <p class="date"><%=new Date(data.createdAt).toLocaleString()%></p>
                                                         </div>
 														<hr/>
                                                         <div class="col-md-12">
-                                                            <h4><%=msg.subjek_message%>.</h4>
+                                                            <h4><%=data.subjek_message%>.</h4>
                                                         </div>
                                                     </div>
                                                     <div class="sender-info">
                                                         <div class="row">
                                                             <div class="col-md-12">
                                                                 <img alt="" src="/images/ava_profile.jpg">
-                                                                <strong><%=msg.kepada_message%></strong>
-                                                                <span>[<%=msg.cc_message%>]</span>
+                                                                <strong><%=data.message.first_name%><%=data.message.last_name%></strong>
+                                                                <span>[<%=data.message.email%>]</span>
                                                                 to
                                                                 <strong>me</strong>
                                                                 <a class="sender-dropdown " href="javascript:;">
@@ -232,15 +231,14 @@
                                                         </div>
                                                     </div>
                                                     <div class="view-mail">
-                                                        <p><%=msg.text_message%></p>
-														<!-- <p>ID: <%=msg.from%></p> -->
+                                                        <p><%=data.text_message%></p>
                                                     </div>
                                                     <div class="compose-btn pull-left">
                                                         <a class="btn btn-sm btn-primary" href=""><i class="fa fa-reply"></i> Reply</a>
                                                         <button class="btn btn-sm "><i class="fa fa-arrow-right"></i> Forward</button>
                                                         <button title="" data-placement="top" data-toggle="tooltip" data-original-title="Trash" class="btn btn-sm tooltips"><i class="fa fa-trash-o"></i></button>
                                                     </div>
-                                                </div> 
+                                                </div>
 											</div>
 										</div>
 									</div>
