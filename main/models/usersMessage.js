@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 var crypto = require('crypto');
-var encDec = require('../../encANDdec');
+var encDec = require('../../public/js/encANDdec');
 
 var Schema = mongoose.Schema;
 
@@ -8,7 +8,7 @@ var userMessage = new Schema({
     kepada_message : {type : String, required: true},
     cc_message :{type : String, required: true},
     subjek_message : {type : String, required: true},
-    text_message : {type : String, set: encDec.enc},
+    text_message : {type : String, get: encDec.dec, set: encDec.enc },
     createdAt : {type: Date, default:Date.now},
     updateAt : {type: Date, default:Date.now},
     dari :{
@@ -18,6 +18,9 @@ var userMessage = new Schema({
     isRead : {type:Boolean, default:false},
     // get: decrypt, set: encrypt
 }, {collection: 'message_users'});
+
+userMessage.set('toObject', {getters: true, setters: true});
+userMessage.set('toJSON', {getters: true, setters: true});
 
 
 var IV = crypto.randomBytes(16);
@@ -84,6 +87,6 @@ userMessage.statics.decrypt = function decrypt(MESSAGE) {
         }
     }
 
-
-var usermessage = mongoose.model('message_data', userMessage);
-module.exports = usermessage;
+module.exports = mongoose.model('message_data', userMessage);
+// var usermessage = mongoose.model('message_data', userMessage);
+// module.exports = usermessage;

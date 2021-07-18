@@ -258,8 +258,7 @@
                               								<% if(data.length) { %>
 
 															<% data.forEach(function(msgs){ %>
-																<tr id="chat-list" name= "ids" data-link="bacaPesan/<%=msgs.id%>" data-target="_SELF">
-																	<!-- <input type="hidden" name="id" id="" value="<%=msgs._id%>"> -->
+																<tr id="chat-list" name= "ids" data-link="bacaPesan/<%=msgs.id%>" data-target="_SELF" data-process="">
 																	<td class="inbox-small-cells">
 																		<input type="checkbox" class="mail-checkbox">
 																	</td>
@@ -268,10 +267,9 @@
 																	<td width="6%">
 																	<div class="d-flex">
 																		<%=msgs.subjek_message%> &nbsp; - &nbsp;
-																		<span class="kep"><%-msgs.text_message%></span>
+																		<span class="kep"><%=msgs.text_message%></span>
 																	</div>
 																	</td>
-																	<!-- <td class="view-message  inbox-small-cells"><i class="fa fa-paperclip"></i></td> -->
 																	<td class="text-right" width="40%"><%=new Date(msgs.createdAt).toLocaleString()%></td>
 																</tr>
 																<% }); %>

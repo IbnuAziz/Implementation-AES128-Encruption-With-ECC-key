@@ -5,8 +5,7 @@ const LocalStrategy = require('passport-local').Strategy;
 
 const usersMessage = require('../models/usersMessage');
 const usersSignUp = require('../models/usersSignUp');
-const { data } = require('jquery');
-const { find } = require('../models/usersMessage');
+const enc_dec = require('../../public/js/encANDdec')
 
 mongoose.set('useCreateIndex', true);
 // Sign In GET
@@ -105,17 +104,18 @@ exports.pesanmasuk = async (req, res, next) => {
     {
       $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$results", 0 ] }, "$$ROOT" ] } }
     },
-    {$unwind: "$results"}
-    // { $project: { results: 1 } }
+    // { $project: { results: {$split: ["$text_message",":"]}} },
+    {$unwind: "$results"},
   ])
   .exec((err, result)=>{
     if(err){
       next(err)
     }
+    
     res.render('pesanMasuk', {
       title: 'Pesan Masuk',
+      helpers: enc_dec,
       data : result.map(doc =>({
-        
           id: doc._id,
           subjek_message: doc.subjek_message,
           text_message: doc.text_message,
@@ -123,7 +123,7 @@ exports.pesanmasuk = async (req, res, next) => {
           first_name: doc.first_name,
           last_name: doc.last_name,
           createdAt: doc.createdAt,
-          isRead: doc.isRead 
+          isRead: doc.isRead
         
       })),
       user : req.user
@@ -194,6 +194,8 @@ async function insertRecordmessage(req, res) {
         'success_msg',
         'Message Send And Encrypted'
       );
+      console.time('Pesan Masuk Time : ')
+      console.timeEnd('Pesan Masuk Time : ')
       res.redirect('/')
       }
     if(err) throw err
@@ -241,7 +243,6 @@ exports.pesanterkirim = async (req, res)=>{
 exports.bacapesan_byId = async (req, res, next) => {
   const ID = req.params;
   await usersMessage.aggregate([
-    // IDS = messages.map((el)=>{return mongoose.Types.ObjectId(el)}),
     { $match : {'dari' : {$ne: req.user._id}}},
     { $lookup: { from: "signup_users", localField: "dari", foreignField: "_id", as: "message"  } },
 /*     {
@@ -264,10 +265,12 @@ exports.bacapesan_byId = async (req, res, next) => {
     
     res.render('bacaPesan', {
       title: 'Baca Pesan',
+      helper: enc_dec,
       data : itemMessage,
       user : req.user
     })
-    console.log(itemMessage)
+    // console.time('Baca Pesan Time : ', itemMessage)
+    // console.timeEnd('Baca Pesan Time : ', itemMessage)
   })
 }
 

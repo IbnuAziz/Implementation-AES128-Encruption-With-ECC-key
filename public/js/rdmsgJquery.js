@@ -1,13 +1,13 @@
-// import * as encDec from '../../encANDdec';
 
 $(function() {
     $("table tr").click(function(e) {
       var u = $(this).data("link");
       var t = $(this).data("target");
-      console.log(u, t);
+      var p = $(this).data("process");
+      console.log(u, t, p);
       if (t.length) {
         console.log('w-open')
-        window.open(u, t);
+        window.open(u, t, p);
       } else {
         console.log('w-location')
         window.location.href = u;
