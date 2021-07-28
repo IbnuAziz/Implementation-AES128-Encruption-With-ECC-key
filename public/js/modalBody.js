@@ -1,4 +1,5 @@
-$('.openBtn').on('click',function(){
+$('.openBtn').on('click',function(e){
+    e.preventDefault();
     $('.modal-body').load('modalBody',function(){
         $('#myModal').modal({show:true});
     });

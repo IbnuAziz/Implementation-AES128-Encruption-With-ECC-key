@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet"> 
+        <!--Dcounts-->
+        <link rel="stylesheet" type="text/css" href='css/dcounts.css'>
+        <!--Sweet Alert-->
+        <link rel="stylesheet" href="css/sweetalert/sweetalert2.css">
+    </head>
+        <body>
+            <div class="form-style-8" id="myForm">
+                <h2>New Message</h2>
+                <form role="form" method="POST" action="/pesanMasuk">
+                        <input 
+                            type="text" 
+                            name="kepada_message"
+                            id="formGroupkepada" 
+                            placeholder="Nama Penerima"
+                            required = "required"
+                        />
+                        <!-- value="<%= typeof kepada_message != 'undefined' ? kepada_message : '' %>" -->
+                    <div class="form-group">
+                        <input 
+                            type="email" 
+                            name="cc_message"
+                            id="cc" 
+                            placeholder="Email Penerima"
+                            required = "required"
+                        />
+                    </div>
+
+                    <div class="form-group">
+                        <input 
+                            type="text" 
+                            name="subjek_message" 
+                            id="formGroupsubjek" 
+                            placeholder="Subjek"
+                            required = "required"
+                        />
+                    </div>
+                    
+                    <div class="form-group msg">
+                    <input name="text_message" id="text_message" type="hidden" >
+                        
+                            <div id="Quilleditor" style="height: 130px;"></div>
+                        
+                    </div>
+                  <input type="submit" value="Send Message" />
+                  <button type="button" class="btnclose" onclick="closeForm()">x</button>
+                </form>
+              </div>
+            <!-- Required Jquery -->
+            <script type="text/javascript" src="js/jquery/jquery.min.js "></script>
+            <script type="text/javascript" src="js/jquery-ui/jquery-ui.min.js "></script>
+            <script type="text/javascript" src="js/popper.js/popper.min.js"></script>
+            <script type="text/javascript" src="js/bootstrap/js/bootstrap.min.js "></script>
+            <script type="text/javascript" src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
+            <script type="text/jacascript" src="js/sweetalert/sweetalert2.all.min.js"></script>
+            <script type="text/jacascript" src="js/swalTulisPesan.js"></script>
+            <script>
+              var quill = new Quill('#Quilleditor', {
+                placeholder: 'Message Here!...',
+                theme: 'snow'
+              });
+              var form = document.querySelector('form');
+              form.onsubmit = function() {
+                //console.log('submit', JSON.stringify(quill.root.innerHTML));
+                const msg = JSON.stringify(quill.root.innerHTML);
+                document.getElementById('text_message').value = msg;
+              };
+            </script>
+            <script type="text/javascript" src="js/dcounts-js.min.js "></script>
+            <!-- counter from subjek  -->
+            <script>
+              dCounts('formGroupsubjek', 20);
+            </script>
+            
+    </body>
+</html>
+

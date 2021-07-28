@@ -51,6 +51,19 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'assets')));
 
+app.use((req, res, next) => {
+	res.header("Acces-Control-Allow-Origin","*");
+	res.header(
+		"Acces-Control-Allow-Headers",
+		"Origin, X-Requested-With, Content-Type, Accept, Authorization"
+	);
+	if(req.method === 'OPTIONS'){
+		res.header('Acces-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
+		return res.status(200).json({});
+	}
+	next();
+});
+
 app.use(function(req,res,next){
   res.locals.currentUser = req.user;
   next();
@@ -87,6 +100,8 @@ app.use('/', usersRouter);
 app.use('/signUp', usersRouter);
 app.use('/pesanMasuk', usersRouter);
 app.use('/bacaPesan', usersRouter);
+app.use('/deletePesan', usersRouter);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

@@ -5,7 +5,7 @@ const usersController = require('../controllers/users');
 const { ensureAuthenticated,forwardAuthenticated } = require('../../config/auth');
 
 router.get('/coba',   usersController.coba_get);
-router.post('/coba/',  usersController.coba_post);
+router.post('/coba',  usersController.coba_post);
 router.get('/signUp', forwardAuthenticated, usersController.signUp);
 router.post('/signUp', usersController.signUp_save);
 router.get('/signIn', forwardAuthenticated, usersController.signIn);
@@ -20,5 +20,6 @@ router.get('/confirm', (req, res) => {
 });
 router.post('/pesanMasuk', ensureAuthenticated, usersController.pesanmasuk_save);
 router.get('/logout', usersController.logoutUsers);
+router.get('/deletePesan/:id', ensureAuthenticated, usersController.message_delete);
 
 module.exports = router;

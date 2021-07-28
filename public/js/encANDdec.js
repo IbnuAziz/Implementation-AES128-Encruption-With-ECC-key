@@ -33,7 +33,7 @@ function encrypt(plaintext) {
     encrypted += chiper.final('hex');
 
     var tag = chiper.getAuthTag().toString('hex');
-    
+
     return "".concat(IV, tag, encrypted);
     }catch(error){
         console.log('No Encrypted: ', error)
@@ -43,8 +43,8 @@ function encrypt(plaintext) {
 function decrypt(ciphertext) {
     try {
         var Ddata = ciphertext;
-        
-        let iv = Ddata.slice(0, 32),
+
+        var iv = Ddata.slice(0, 32),
         tag = Ddata.slice(32, 64),
         text = Ddata.slice(64);
         
@@ -52,10 +52,13 @@ function decrypt(ciphertext) {
 
         dechiper.setAuthTag(Buffer.from(tag, 'hex'));
 
+        var buff = [];
         var decrypted = dechiper.update(text, 'hex', 'utf8');
-        decrypted += dechiper.final('utf8');
 
-        return decrypted
+        buff.push(decrypted);
+        buff.push(dechiper.final('utf8'));
+        return buff.join('').replace(/^"(.*)"$/, '$1');
+
     } catch (error) {
         console.log('No Decrypted: ', error)
     }

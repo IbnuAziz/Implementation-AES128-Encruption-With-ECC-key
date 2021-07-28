@@ -2,10 +2,12 @@ const mongoose = require('mongoose');
 var bcrypt = require('bcryptjs');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
+const Swal = require('sweetalert2')
 
 const usersMessage = require('../models/usersMessage');
 const usersSignUp = require('../models/usersSignUp');
-const enc_dec = require('../../public/js/encANDdec')
+const enc_dec = require('../../public/js/encANDdec');
+const setinter = require('../../public/js/formfunc');
 
 mongoose.set('useCreateIndex', true);
 // Sign In GET
@@ -95,6 +97,7 @@ async function insertRecordsignUp (req, res) {
   }
 }
 
+
 // Alternative Pesan Masuk Get From MongoDB
 exports.pesanmasuk = async (req, res, next) => {
   await usersMessage.aggregate([
@@ -115,6 +118,7 @@ exports.pesanmasuk = async (req, res, next) => {
     res.render('pesanMasuk', {
       title: 'Pesan Masuk',
       helpers: enc_dec,
+      inter: setinter,
       data : result.map(doc =>({
           id: doc._id,
           subjek_message: doc.subjek_message,
@@ -124,27 +128,16 @@ exports.pesanmasuk = async (req, res, next) => {
           last_name: doc.last_name,
           createdAt: doc.createdAt,
           isRead: doc.isRead
-        
-      })),
+      }))
+      .reverse(),
       user : req.user
     })
   })
 }
-// Pesan Masuk Get Data From Database MongoDB
-// exports.pesanmasuk = async (req, res)=>{
-//   await usersMessage.find((err, docs) => {
-//     docs = docs.reverse();
-//     if(!err){
-//       res.render('pesanMasuk', {
-//         title: 'Pesan masuk', 
-//         msg: docs,
-//         user : req.user
-//       });
-//     }else{
-//       console.log('Error Get Data : ' + err);
-//     }
-//   })
-// };
+
+exports.inter = function interV(){
+  console.log('interval')
+}
 
 // Dynamic Modal Body Form Get
 exports.modalbody = async (req, res)=>{
@@ -194,8 +187,8 @@ async function insertRecordmessage(req, res) {
         'success_msg',
         'Message Send And Encrypted'
       );
-      console.time('Pesan Masuk Time : ')
-      console.timeEnd('Pesan Masuk Time : ')
+      // console.time('Pesan Masuk Time : ')
+      // console.timeEnd('Pesan Masuk Time : ')
       res.redirect('/')
       }
     if(err) throw err
@@ -231,24 +224,20 @@ exports.coba_get = async (req, res) => {
   });
 }
 
-// Pesan Terkirim Get
-exports.pesanterkirim = async (req, res)=>{
-  res.render('pesanTerkirim', {
-    title: 'Pesan Terkirim',
-    user : req.user
-  });
-};
-
 // Get Data By Id
 exports.bacapesan_byId = async (req, res, next) => {
   const ID = req.params;
+  let itemMessage;
   await usersMessage.aggregate([
-    { $match : {'dari' : {$ne: req.user._id}}},
+    { $match : {$or: [
+      {'dari' : {$ne: req.user._id}}, 
+      {'dari' : {$eq: req.user._id}}
+    ]}},
     { $lookup: { from: "signup_users", localField: "dari", foreignField: "_id", as: "message"  } },
 /*     {
       $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$message", 0 ] }, "$$ROOT" ] } }
     }, */
-    {$unset:["kepada_message", "dari", "cc_message", "message.password", "message.messages", "message._id"]},
+    {$unset:["dari", "cc_message", "message.password", "message.messages", "message._id"]},
     {$unwind: "$message"}
   ])
   .exec((err, mess)=>{
@@ -256,7 +245,7 @@ exports.bacapesan_byId = async (req, res, next) => {
       console.log(err)
     }
 
-    let itemMessage
+    
     mess.forEach(doc => {
      if(doc._id == ID.id){
       itemMessage = doc
@@ -274,6 +263,54 @@ exports.bacapesan_byId = async (req, res, next) => {
   })
 }
 
+// Pesan Terkirim Get
+exports.pesanterkirim = async (req, res)=>{
+  await usersMessage.aggregate([
+    { $match : {'dari' : {$eq: req.user._id}}},
+    { $lookup : {from: "signup_users", localField: "dari", foreignField: "_id", as: "sent"}},
+    {
+      $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$sent", 0 ] }, "$$ROOT" ] } }
+    },
+    {$unwind: "$sent"}
+  ])
+  .exec((err, data)=>{
+    if(err){
+      res.staus(404).json(err);
+    }
+
+
+    res.render('pesanTerkirim', {
+      title: 'Pesan Terkirim',
+      data : data.map(doc=>({
+        id: doc._id,
+        kepada: doc.kepada_message,
+        subjek_message: doc.subjek_message,
+        text_message: doc.text_message,
+        createdAt: doc.createdAt,
+        isRead: doc.isRead
+      })).reverse(),
+      user : req.user
+    })
+  })
+}
+
+// Delete Message 
+exports.message_delete = async (req, res, next) => {
+  const id = req.params.id;
+  await usersMessage.findByIdAndRemove(id, (err, result) => {
+    if(err){
+      res.redirect('../pesanMasuk', {
+        error: err
+      })
+    }else{
+      req.flash(
+        'success_msg',
+        'Message Deleted Successfully!'
+      );
+      res.redirect('../pesanMasuk')
+    }
+  })
+}
 // Logout
 exports.logoutUsers = async (req, res)=>{
   req.logout();

@@ -104,13 +104,12 @@
 						<div class="pcoded-inner-navbar main-menu">
 							<div class="">
 								<div class="user-head">
-									<a class="inbox-avatar" href="javascript:;">
+									<a class="inbox-avatar" href="#!">
 										<img  width="64" hieght="60" src="/images/ava_profile.jpg">
 									</a>
 									<div class="user-name">
 										<h5 id="more-details"><%= user.first_name %> <%= user.last_name %><i class="fa fa-chevron-down" id="dropmore"></i></h5>
-										<span><a href="gmail.com"><%= user.email %></a></span>
-										<span><a href="gmail.com"></a></span>
+										<span><a href="https://mail.google.com/" target="_blank"><%= user.email %></a></span>
 									</div>
 
 
@@ -128,37 +127,25 @@
 								</div>
 							</div>
 							<div class="inbox-body">
-								<!-- Button trigger modal -->
-								<!-- <a class="btn btn-compose openBtn" data-toggle="modal" href="#myModal">
-									Tulis Pesan
-								</a> -->
-								<button type="button" data-toggle="modal" data-target="#myModal" class="btn btn-compose openBtn">Tulis Pesan</button>
-								<!-- Modal -->
-								<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-									<div class="modal-dialog">
-										<div class="modal-content">
-											<div class="modal-header">
-												<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-												<h4 class="modal-title">Tulis Pesan</h4>
-											</div>
-											<div class="modal-body">
-												<%- include ./partials/errMessage.ejs %>
-												<!--Dynamic Modal Body-->
-											</div>
-										</div>
-										<!-- /.modal-content -->
-									</div>
-									<!-- /.modal-dialog -->
-								</div>
-								<!-- /.modal -->
+								<button class="btn btn-compose tls" id="toggle" onclick="openForm()">Tulis Pesan</button>
+								<% include ./partials/formmessage.ejs %>
 							</div>
 							<ul class="inbox-nav inbox-divider">
-								<li class="">
-									<a href="/pesanMasuk"><i class="fa fa-inbox"></i> Pesan Masuk <span class="label label-danger pull-right">2</span></a>
-								</li>
-								<li>
-									<a href="/pesanTerkirim"><i class="fa fa-envelope-o"></i> Pesan Terkirim</a>
-								</li>
+								<% if(data.message.email != user.email){ %>
+									<li class="active">
+										<a href="/pesanMasuk"><i class="fa fa-inbox"></i> Pesan Masuk <span class="label label-danger pull-right">2</span></a>
+									</li>
+									<li>
+										<a href="/pesanTerkirim"><i class="fa fa-envelope-o"></i> Pesan Terkirim</a>
+									</li>
+								<% }else{ %>
+									<li>
+										<a href="/pesanMasuk"><i class="fa fa-inbox"></i> Pesan Masuk <span class="label label-danger pull-right">2</span></a>
+									</li>
+									<li class="active">
+										<a href="/pesanTerkirim"><i class="fa fa-envelope-o"></i> Pesan Terkirim</a>
+									</li>			
+								<% } %>
 								<li>
 									<a href="#"><i class="fa fa-bookmark-o"></i> Penting</a>
 								</li>
@@ -178,7 +165,7 @@
 								<div class="row align-items-center">
 									<div class="col-md-8">
 										<div class="page-header-title">
-											<h5 class="m-b-10">Welcome Page</h5>
+											<h5 class="m-b-10">Baca Pesan</h5>
 											<p class="m-b-0">Selamat Datang</p>
 										</div>
 									</div>
@@ -187,7 +174,7 @@
 											<li class="breadcrumb-item">
 												<a href="/"><i class="fa fa-home"></i></a> <!--index.htlm-->
 											</li>
-											<li class="breadcrumb-item">Welcome Page</li>
+											<li class="breadcrumb-item">Baca Pesan</li>
 										</ul>
 									</div>
 								</div>
@@ -204,7 +191,11 @@
                                                     <div class="heading-inbox row">
                                                         <div class="col-md-8">
                                                             <div class="compose-btn">
-                                                                <a class="btn btn-sm" href="/pesanMasuk"><i class="fas fa-arrow-left" style="font-size: large;"></i></i></a>
+																<% if(data.message.email === user.email){ %>
+																	<a class="btn btn-sm" href="/pesanTerkirim"><i class="fas fa-arrow-left" style="font-size: large;"></i></i></a>
+																<% }else{ %>
+																	<a class="btn btn-sm" href="/pesanMasuk"><i class="fas fa-arrow-left" style="font-size: large;"></i></i></a>
+																<% } %>
                                                                 <button title="" data-placement="top" data-toggle="tooltip" data-original-title="Trash" class="btn btn-sm tooltips"><i class="fa fa-trash-o"></i></button>
                                                             </div>
                                                         </div>
@@ -213,17 +204,21 @@
                                                         </div>
 														<hr/>
                                                         <div class="col-md-12">
-                                                            <h4><%=data.subjek_message%>.</h4>
+                                                            <h4><%=data.subjek_message%></h4>
                                                         </div>
                                                     </div>
                                                     <div class="sender-info">
                                                         <div class="row">
                                                             <div class="col-md-12">
                                                                 <img alt="" src="/images/ava_profile.jpg">
-                                                                <strong><%=data.message.first_name%><%=data.message.last_name%></strong>
+                                                                <strong><%=data.message.first_name%> <%=data.message.last_name%></strong>
                                                                 <span>[<%=data.message.email%>]</span>
-                                                                to
-                                                                <strong>me</strong>
+																to
+																<% if(data.message.email === user.email){ %>
+																	<strong><%=data.kepada_message%></strong>
+																<% }else{ %>
+																	<strong>me</strong>
+																<% } %>
                                                                 <a class="sender-dropdown " href="javascript:;">
                                                                     <i class="fa fa-chevron-down"></i>
                                                                 </a>
@@ -231,7 +226,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="view-mail">
-                                                        <p><%=helper.dec(data.text_message)%></p>
+                                                        <p><%-helper.dec(data.text_message)%></p>
                                                     </div>
                                                     <div class="compose-btn pull-left">
                                                         <a class="btn btn-sm btn-primary" href=""><i class="fa fa-reply"></i> Reply</a>
@@ -254,6 +249,7 @@
 <% include templates/footer.ejs %>
 <script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
 <script type="text/javascript" src="/js/modalBody.js "></script>
+<script type="text/javascript" src="/js/formfunc.js "></script>
 <!--   <script type="text/javascript" src="js/modalEffect.js"></script> -->
 </body>
 </html>

@@ -1,6 +1,6 @@
 
 $(function() {
-    $("table tr").click(function(e) {
+    $("table tr").on('click', function(e) {
       var u = $(this).data("link");
       var t = $(this).data("target");
       var p = $(this).data("process");
