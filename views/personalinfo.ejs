@@ -5,7 +5,9 @@
 	<link rel="stylesheet" type="text/css" href='/css/home.css'>
 	<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet"> 
     <!--Dcounts-->
-    <link rel="stylesheet" type="text/css" href='/css/dcounts.css'>
+    <link rel="stylesheet" href='/css/dcounts.css'>
+    <!--Profile Info-->
+    <link rel="stylesheet" href="/css/personalinfo.css">
 </head>
 <body>
 	<!-- Pre-loader start -->
@@ -117,7 +119,7 @@
 										<li class="more-details">
 											<!--user-profile.html-->
 											<a href=""><i class="ti-user"></i>View Profile</a>
-											<a href="/personalinfo?"><i class="ti-settings"></i>Settings</a>
+											<a href="#!"><i class="ti-settings"></i>Settings</a>
 											<!--auth-normal-sign-in.html-->
 											<a href="logout"><i class="ti-layout-sidebar-left"></i>Logout</a>
 										</li>
@@ -177,41 +179,113 @@
 									<div class="page-body">
 										<div class="row">
 											<div class="col-sm-12">
-												<div class="card">
-													<div class="card-header">
-														<h5>Welcome</h5>
-														<span>Selamat datang di website simulasi enkripsi pesan text 
-														menggunakan AES128 dan ECC</span>
-														<div class="card-header-right">
+                                                <div class="card">
+                                                    <div class="card-header profcardhead">
+                                                        <div class="card-header-right">
 															<ul class="list-unstyled card-option">
-																<li>
-																	<i class="fa fa fa-wrench open-card-option"></i>
-																</li>
-																<li>
-																	<i class="fa fa-window-maximize full-card"></i>
-																</li>
-																<li>
-																	<i class="fa fa-minus minimize-card"></i>
-																</li>
-																<li>
 																	<i class="fa fa-refresh reload-card "></i>
 																</li>
 															</ul>
 														</div>
-													</div>
-													<div class="card-block">
-														<p>
-															Website ini adalah website yang di buat untuk simulasi enkripsi
-															sebuah pesan, dimana pesan yang akan di kirimkan di enksripsi terlebih
-															dahulu menggunakan algoritma AES 128 dan ECC. Enkripsi pesan di lakukan
-															dengan shared key pengirim, sahred key ini di dapat dari 
-															perhitungan antara public key penerima dan private key pengirim 
-															begitupun sebaliknya. Perhitungan shared key
-															menggunakan algoritma ECDH dimana algoritma ini bagian dari ECC. Untuk 
-															proses dekripsi pesan menggunakan shared key penerima pesan.
-														</p>
-													</div>
-												</div>
+                                                    </div>
+                                                    <div class="card-block profcardbody">
+														<div class="container emp-profile">
+															<form method="post">
+																<div class="row">
+																	<div class="col-md-4">
+																		<div class="profile-img">
+																			<img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS52y5aInsxSm31CvHOFHWujqUx_wWTS9iM6s7BAm21oEN_RiGoog" alt=""/>
+																			<div class="file">
+																				<label for="file" class="changetext">Change Photo</label>
+																				<input type="file" name="file" class="filecursor"/>
+																			</div>
+																		</div>
+																	</div>
+																	<div class="col-md-6">
+																		<div class="profile-head">
+																					<h5 class="text-trans">
+																						<%= data.first_name %> <%= data.last_name %>
+																					</h5>
+																					<h6>
+																						<%= data.profession %>
+																					</h6>
+																			<ul class="nav nav-tabs" id="myTab" role="tablist">
+																				<li class="nav-item">
+																					<a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Basic Info</a>
+																				</li>
+																				<li class="nav-item">
+																					<a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Contact Info</a>
+																				</li>
+																			</ul>
+																		</div>
+																	</div>
+																	<div class="col-md-2">
+																		<a class="profile-edit-btn" name="btnEdit" href="/personal-info-edit/<%-data.id%>">Edit Profile</a>
+																		<!-- <input type="submit" class="profile-edit-btn" name="btnAddMore" value="Edit Profile"/> -->
+																	</div>
+																</div>
+																<div class="row">
+																	<div class="col-md-8 rowbot">
+																		<div class="tab-content profile-tab" id="myTabContent">
+																			<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+																						<div class="row">
+																							<div class="col-md-6">
+																								<label>Name</label>
+																							</div>
+																							<div class="col-md-6 text-trans">
+																								<p><%= user.first_name %> <%= user.last_name %></p>
+																							</div>
+																						</div>
+																						<div class="row">
+																							<div class="col-md-6">
+																								<label>Brithday</label>
+																							</div>
+																							<div class="col-md-6">
+																								<p><%= data.brithday %></p>
+																							</div>
+																						</div>
+																						<div class="row">
+																							<div class="col-md-6">
+																								<label>Gender</label>
+																							</div>
+																							<div class="col-md-6">
+																								<p><%= data.gender %></p>
+																							</div>
+																						</div>
+																						<div class="row">
+																							<div class="col-md-6">
+																								<label>Profession</label>
+																							</div>
+																							<div class="col-md-6">
+																								<p><%= data.profession %></p>
+																							</div>
+																						</div>
+																			</div>
+																			<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+																						<div class="row">
+																							<div class="col-md-6">
+																								<label>Email</label>
+																							</div>
+																							<div class="col-md-6">
+																								<p><%= user.email %></p>
+																							</div>
+																						</div>
+																						<div class="row">
+																							<div class="col-md-6">
+																								<label>Phone</label>
+																							</div>
+																							<div class="col-md-6">
+																								<p><%= data.phoneNumber %></p>
+																							</div>
+																						</div>
+																			</div>
+																		</div>
+																	</div>
+																</div>
+															</form>           
+														</div>
+                                                    </div>
+                                                </div>
 											</div>
 										</div>
 									</div>

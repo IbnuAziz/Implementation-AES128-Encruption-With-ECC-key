@@ -26,7 +26,11 @@ mongoose.Promise = global.Promise;
 
 var mongoString = "mongodb+srv://EnkripsiAES128:enkripsiAES128@cluster0.3yt2b.gcp.mongodb.net/EnkripsiAES128?retryWrites=true&w=majority"
 
-mongoose.connect(mongoString, {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connect(mongoString, {
+  useNewUrlParser: true, 
+  useUnifiedTopology: true,
+  useFindAndModify: false
+})
 
 mongoose.connection.on("error", function(error) {
   console.log(error)
@@ -101,6 +105,7 @@ app.use('/signUp', usersRouter);
 app.use('/pesanMasuk', usersRouter);
 app.use('/bacaPesan', usersRouter);
 app.use('/deletePesan', usersRouter);
+app.use('/personal-info-edit', usersRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

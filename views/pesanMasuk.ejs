@@ -119,7 +119,7 @@
 										<li class="more-details">
 											<!--user-profile.html-->
 											<a href=""><i class="ti-user"></i>View Profile</a>
-											<a href="#!"><i class="ti-settings"></i>Settings</a>
+											<a href="/personalinfo?"><i class="ti-settings"></i>Settings</a>
 											<!--auth-normal-sign-in.html-->
 											<a href="logout"><i class="ti-layout-sidebar-left"></i>Logout</a>
 										</li>
@@ -133,7 +133,7 @@
 							<%- include ./partials/errMessage.ejs %>
 							<ul class="inbox-nav inbox-divider">
 								<li class="active">
-									<a href="/pesanMasuk"><i class="fa fa-inbox"></i> Pesan Masuk <span class="label label-danger pull-right">2</span></a>
+									<a href="/pesanMasuk"><i class="fa fa-inbox"></i> Pesan Masuk <span class="label label-danger pull-right"><%= data.isRead%></span></a>
 								</li>
 								<li>
 									<a href="/pesanTerkirim"><i class="fa fa-envelope-o"></i> Pesan Terkirim</a>
@@ -239,7 +239,7 @@
                               								<% if(data.length) { %>
 
 															<% data.forEach(function(msgs){ %>
-																<tr id="chat-list" name= "ids" data-link="bacaPesan/<%=msgs.id%>" data-target="_SELF" data-process="">
+																<tr class="gl unread" id="chat-list" name= "ids" data-link="bacaPesan/<%=msgs.id%>" data-target="_SELF" data-status="unread">
 																	<td class="inbox-small-cells ic">
 																		<input type="checkbox" class="mail-checkbox">
 																	</td>
@@ -254,7 +254,7 @@
 																	<a href="/deletePesan/<%=msgs.id%>" class="icon fa fa-trash" tabindex="0" data-toggle="tooltip" title="Delete"></a>
 																	</td>
 																	<td class="text-right crData view-message"><%=new Date(msgs.createdAt).toLocaleString()%> 
-																		
+																	<td><%=msgs.isRead%></td>
 																	</td>
 																</tr>
 																<% }); %>
@@ -287,15 +287,22 @@
 	<script type="text/javascript" src="/js/formfunc.js "></script>
 	<!-- <script type="text/javascript" src="https://requirejs.org/docs/release/2.3.6/minified/require.js"></script> -->
 	<script>
-	$(function () {
-  		$('[data-toggle="tooltip"]').tooltip()
-	})
+		$(function () {
+			$('[data-toggle="tooltip"]').tooltip()
+		});
+	
+		$(document).ready(function () {	
 
-	$("icon").on('click', function(event) {
-    event.preventDefault();
-    // document.getElementById(".myDiv").style.flexGrow = "5";
-    window.location.href = "/pesanTerkirim";
-	});
+			$(document).on("click", '#chat-list', function (e) {
+			e.stopPropagation();
+			e.preventDefault();
+			$(this).toggleClass('read');
+			if ($(this).hasClass('read'))
+				$(this).attr('data-status', 'read')
+			else
+				$(this).attr('data-status', 'unread')
+			});
+		});
 	</script>
 </body>
 </html>

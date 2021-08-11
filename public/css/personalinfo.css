@@ -1,0 +1,148 @@
+body {
+  color: #797979;
+  background: #f1f2f7;
+  font-family: "Open Sans", sans-serif;
+  padding: 0px !important;
+  margin: 0px !important;
+  font-size: 13px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-font-smoothing: antialiased;
+}
+@media (min-width: 1200px){
+    .container {
+        max-width: 980px !important; 
+    }
+}
+.rowbot{
+    margin-left: 320px;
+}
+.profcardbody{
+    padding-top: 2px !important;
+}
+.profcardhead{
+    padding-bottom: 2px !important;
+}
+.text-trans{
+    text-transform: capitalize;
+}
+
+.emp-profile{
+    padding: 3%;
+    margin-top: 3%;
+    margin-bottom: 3%;
+    border-radius: 0.5rem;
+    background: #fff;
+}
+.profile-img{
+    text-align: center;
+}
+.profile-img img{
+    width: 70%;
+    height: 100%;
+}
+.profile-img .file {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    margin-top: -20%;
+    width: 70%;
+    border: none;
+    border-radius: 0;
+    font-size: 15px;
+    background: #242424b8;
+    padding: 5px !important;
+    cursor: pointer;
+}
+
+.filecursor{
+    cursor: pointer;
+}
+
+.changetext{
+    color: #fff;
+}
+
+.profile-img .file input {
+    position: absolute;
+    opacity: 0;
+    right: 0;
+    top: 0;
+}
+.profile-head h5{
+    color: #333;
+}
+.profile-head h6{
+    color: #0062cc;
+    padding-bottom: 20px;
+}
+.profile-edit-btn{
+    border: none;
+    border-radius: 1.5rem;
+    width: 70%;
+    padding: 5px 8px;
+    font-weight: 600;
+    color: #6c757d;
+    cursor: pointer;
+    background-color: #dfdfdf70;
+    margin-left: -65px;
+}
+.profile-cancel-btn{
+    border: none;
+    border-radius: 1.5rem;
+    width: 70%;
+    padding: 5px 8px;
+    font-weight: 600;
+    color: #6c757d;
+    cursor: pointer;
+    background-color: #dfdfdf70;
+    text-align: center;
+    display: inline-block;
+}
+.proile-rating{
+    font-size: 12px;
+    color: #818182;
+    margin-top: 5%;
+}
+.proile-rating span{
+    color: #495057;
+    font-size: 15px;
+    font-weight: 600;
+}
+.profile-head .nav-tabs{
+    margin-bottom:5%;
+}
+.profile-head .nav-tabs .nav-link{
+    font-weight:600;
+    border: none;
+}
+.profile-head .nav-tabs .nav-link.active{
+    border: none;
+    border-bottom:2px solid #0062cc;
+}
+.profile-work{
+    padding: 14%;
+    margin-top: -15%;
+}
+.profile-work p{
+    font-size: 12px;
+    color: #818182;
+    font-weight: 600;
+    margin-top: 10%;
+}
+.profile-work a{
+    text-decoration: none;
+    color: #495057;
+    font-weight: 600;
+    font-size: 14px;
+}
+.profile-work ul{
+    list-style: none;
+}
+.profile-tab label{
+    font-weight: 600;
+}
+.profile-tab p{
+    font-weight: 600;
+    color: #0062cc;
+}

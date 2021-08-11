@@ -8,6 +8,8 @@ const usersMessage = require('../models/usersMessage');
 const usersSignUp = require('../models/usersSignUp');
 const enc_dec = require('../../public/js/encANDdec');
 const setinter = require('../../public/js/formfunc');
+const isread = require('../../public/js/isread');
+const { data } = require('jquery');
 
 mongoose.set('useCreateIndex', true);
 // Sign In GET
@@ -114,11 +116,12 @@ exports.pesanmasuk = async (req, res, next) => {
     if(err){
       next(err)
     }
-    
-    res.render('pesanMasuk', {
+
+   res.render('pesanMasuk', {
       title: 'Pesan Masuk',
       helpers: enc_dec,
       inter: setinter,
+      read: isread,
       data : result.map(doc =>({
           id: doc._id,
           subjek_message: doc.subjek_message,
@@ -263,6 +266,7 @@ exports.bacapesan_byId = async (req, res, next) => {
   })
 }
 
+
 // Pesan Terkirim Get
 exports.pesanterkirim = async (req, res)=>{
   await usersMessage.aggregate([
@@ -305,9 +309,65 @@ exports.message_delete = async (req, res, next) => {
     }else{
       req.flash(
         'success_msg',
-        'Message Deleted Successfully!'
+        'Message Deleted Successfully!',
+        id
       );
       res.redirect('../pesanMasuk')
+    }
+  })
+}
+
+// Personal Info
+exports.personalInfo = async (req, res) => {
+  const useremail = req.user.email
+  let personalprofile;
+  await usersSignUp.find()
+  .select('first_name last_name email brithday gender phoneNumber profession')
+  .exec()
+  .then(result=>{
+
+    result.forEach(doc => {
+      if(doc.email == useremail){
+        personalprofile = doc
+     }
+    })
+
+    res.render('personalinfo', {
+      title : 'Setting Profile',
+      data: personalprofile,
+      user : req.user,
+    });
+  })
+  .catch(err => {
+    console.log('Personal profile : ',err)
+  })
+}
+
+// Edit Personal Info
+exports.editpersonalInfo = async(req, res, next)=>{
+  console.log(req.params.id)
+  await usersSignUp.findOneAndUpdate({_id: req.params.id}, req.body, {new: true}, (err, docs)=>{
+    if(err){
+      console.log('Edit Personal Info: ', err)
+      next(err)
+    }else{
+      res.render('personal-info-edit',{
+        title: 'Edit Personal Info',
+        user: req.user,
+        data: docs
+      })
+    }
+  })
+}
+
+// Edit Personal Info Save
+exports.editpersonalinfoSAVE = async(req, res, next)=>{
+  await usersSignUp.findByIdAndUpdate({_id: req.params.id}, req.body, (err, docs)=>{
+    if(err){
+      console.log('something wrong in edit personal info save', err);
+      next(err)
+    }else{
+      res.redirect('/personalinfo')
     }
   })
 }

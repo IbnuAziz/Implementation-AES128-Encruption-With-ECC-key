@@ -26,7 +26,7 @@ const IV_LENGTH = 16;
 function encrypt(plaintext) {
     try {
     var IV = crypto.randomBytes(IV_LENGTH).toString('hex')
-    
+
     var chiper = crypto.createCipheriv('aes-128-gcm', Buffer.from(aliceSharedKey, 'hex'), IV);
 
     var encrypted = chiper.update(plaintext, 'utf8','hex');
@@ -49,9 +49,9 @@ function decrypt(ciphertext) {
         text = Ddata.slice(64);
         
         var dechiper = crypto.createDecipheriv('aes-128-gcm', Buffer.from(bobSharedKey, 'hex'), iv);
-
+        
         dechiper.setAuthTag(Buffer.from(tag, 'hex'));
-
+    
         var buff = [];
         var decrypted = dechiper.update(text, 'hex', 'utf8');
 
