@@ -1,5 +1,38 @@
 var express = require('express');
 var router = express.Router();
+const multer = require('multer');
+
+// Image Upload
+const storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, './uploads/')
+    },
+    filename: function(req, file, cb) {
+        cb(null, new Date().toISOString() + "_" + file.originalname)
+    }
+})
+
+const fileFilter = (req, file, cb) => {
+    //reject a file
+    if(
+        file.mimetype === 'image/jpeg' || 
+        file.mimetype === 'image/png' || 
+        file.mimetype === 'image/jpg'
+        )
+    {     
+        cb(null, true);
+    }else{
+        cb(null, false);
+    }
+}
+
+const upload = multer({
+    storage: storage,
+    limits: {
+        fileSize: 1024 * 1024 * 5
+    },
+    fileFilter: fileFilter,
+}).single('personalinfoImage')
 
 const usersController = require('../controllers/users');
 const { ensureAuthenticated,forwardAuthenticated } = require('../../config/auth');
@@ -23,6 +56,6 @@ router.post('/pesanMasuk', ensureAuthenticated, usersController.pesanmasuk_save)
 router.get('/logout', usersController.logoutUsers);
 router.get('/deletePesan/:id', ensureAuthenticated, usersController.message_delete);
 router.get('/:id', ensureAuthenticated, usersController.editpersonalInfo);
-router.post('/:id', ensureAuthenticated, usersController.editpersonalinfoSAVE);
+router.post('/:id', upload, ensureAuthenticated, usersController.editpersonalinfoSAVE);
 
 module.exports = router;

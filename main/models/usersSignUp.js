@@ -36,6 +36,10 @@ var UsersignUp = new Schema({
         type: String,
         default: 'not set'
     },
+    personalinfoImage:{
+        type: String,
+        default: 'leo.png'
+    },
     messages: [{
         type: Schema.Types.ObjectId, 
         ref: 'message_users'

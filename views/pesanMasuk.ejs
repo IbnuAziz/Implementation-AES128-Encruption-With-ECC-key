@@ -105,21 +105,17 @@
 							<div class="">
 								<div class="user-head">
 									<a class="inbox-avatar" href="#!">
-										<img  width="64" hieght="60" src="/images/ava_profile.jpg">
+										<img  width="64" hieght="60" src="/<%= user.personalinfoImage %>">
 									</a>
 									<div class="user-name">
 										<h5 id="more-details"><%= user.first_name %> <%= user.last_name %><i class="fa fa-chevron-down" id="dropmore"></i></h5>
 										<span><a href="https://mail.google.com/" target="_blank"><%= user.email %></a></span>
 									</div>
-
-
 								</div>
 								<div class="main-menu-content">
 									<ul>
 										<li class="more-details">
-											<!--user-profile.html-->
-											<a href=""><i class="ti-user"></i>View Profile</a>
-											<a href="/personalinfo?"><i class="ti-settings"></i>Settings</a>
+											<a href="/personalinfo?"><i class="ti-settings"></i>View Profile</a>
 											<!--auth-normal-sign-in.html-->
 											<a href="logout"><i class="ti-layout-sidebar-left"></i>Logout</a>
 										</li>
@@ -130,11 +126,17 @@
 								<button class="btn btn-compose tls" id="toggle" onclick="openForm()">Tulis Pesan</button>
 								<% include ./partials/formmessage.ejs %>
 							</div>
-							<%- include ./partials/errMessage.ejs %>
+							
 							<ul class="inbox-nav inbox-divider">
-								<li class="active">
-									<a href="/pesanMasuk"><i class="fa fa-inbox"></i> Pesan Masuk <span class="label label-danger pull-right"><%= data.isRead%></span></a>
-								</li>
+								<% if(!data.length) { %>
+									<li class="active">
+										<a href="/pesanMasuk"><i class="fa fa-inbox"></i> Pesan Masuk <span class="label label-danger pull-right">No Message</span></a>
+									</li>
+								<% }else{ %>
+									<li class="active">
+										<a href="/pesanMasuk"><i class="fa fa-inbox"></i> Pesan Masuk <span class="label label-danger pull-right"><%= data.length %></span></a>
+									</li>
+								<% } %>
 								<li>
 									<a href="/pesanTerkirim"><i class="fa fa-envelope-o"></i> Pesan Terkirim</a>
 								</li>
@@ -180,6 +182,7 @@
 										<div class="row">
 											<div class="col-sm-12">
 												<div class="inbox-body">
+													<%- include ./partials/errMessage.ejs %>
 													<div class="mail-option">
 														<div class="chk-all">
 															<input type="checkbox" class="mail-checkbox mail-group-checkbox">
@@ -234,10 +237,9 @@
 															</li>
 														</ul>
 													</div>
-													<table class="table table-inbox table-sm icon-hover" role="grid">
+													<table class="table table-inbox table-sm icon-hover">
 														<tbody>
                               								<% if(data.length) { %>
-
 															<% data.forEach(function(msgs){ %>
 																<tr class="gl unread" id="chat-list" name= "ids" data-link="bacaPesan/<%=msgs.id%>" data-target="_SELF" data-status="unread">
 																	<td class="inbox-small-cells ic">
@@ -249,13 +251,12 @@
 																		<%=msgs.subjek_message%>
 																	</td>
 																	<td class="d-flex sub">
-																	<span style="float: left;">&nbsp; - &nbsp;</span>
-																	<span class="kep w-auto"><%-msgs.text_message%></span>
-																	<a href="/deletePesan/<%=msgs.id%>" class="icon fa fa-trash" tabindex="0" data-toggle="tooltip" title="Delete"></a>
+																		<span style="float: left;">&nbsp; - &nbsp;</span>
+																		<span class="kep w-auto"><%-msgs.text_message%></span>
+																		<a href="/deletePesan/<%=msgs.id%>" class="icon fa fa-trash" id="delete" tabindex="0" data-toggle="tooltip" title="Delete"></a>
 																	</td>
-																	<td class="text-right crData view-message"><%=new Date(msgs.createdAt).toLocaleString()%> 
-																	<td><%=msgs.isRead%></td>
-																	</td>
+																	
+																	<td class="text-right crData view-message"><%=new Date(msgs.createdAt).toLocaleString()%></td>
 																</tr>
 																<% }); %>
 															<% }else { %>
@@ -287,22 +288,23 @@
 	<script type="text/javascript" src="/js/formfunc.js "></script>
 	<!-- <script type="text/javascript" src="https://requirejs.org/docs/release/2.3.6/minified/require.js"></script> -->
 	<script>
+
 		$(function () {
 			$('[data-toggle="tooltip"]').tooltip()
 		});
 	
-		$(document).ready(function () {	
+		// $(document).ready(function () {	
 
-			$(document).on("click", '#chat-list', function (e) {
-			e.stopPropagation();
-			e.preventDefault();
-			$(this).toggleClass('read');
-			if ($(this).hasClass('read'))
-				$(this).attr('data-status', 'read')
-			else
-				$(this).attr('data-status', 'unread')
-			});
-		});
+		// 	$(document).on("click", '#chat-list', function (e) {
+		// 	e.stopPropagation();
+		// 	e.preventDefault();
+		// 	$(this).toggleClass('read');
+		// 	if ($(this).hasClass('read'))
+		// 		$(this).attr('data-status', 'read')
+		// 	else
+		// 		$(this).attr('data-status', 'unread')
+		// 	});
+		// });
 	</script>
 </body>
 </html>

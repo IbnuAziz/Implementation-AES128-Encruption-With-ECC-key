@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 var bcrypt = require('bcryptjs');
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
-const Swal = require('sweetalert2')
+const fs = require('fs');
 
 const usersMessage = require('../models/usersMessage');
 const usersSignUp = require('../models/usersSignUp');
@@ -102,14 +101,15 @@ async function insertRecordsignUp (req, res) {
 
 // Alternative Pesan Masuk Get From MongoDB
 exports.pesanmasuk = async (req, res, next) => {
+  let pesanMasuk=[];
+  let personalprofile={};
+  let usermail = req.user.email
   await usersMessage.aggregate([
-    { $match : {'dari' : {$ne: req.user._id}}},
+    // { $match : {'dari' : {$ne: req.user._id}}},
     { $lookup: { from: "signup_users", localField: "dari", foreignField: "_id", as: "results"  } },
-    {$unset:["kepada_message", "dari", "cc_message"]},
-    {
-      $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$results", 0 ] }, "$$ROOT" ] } }
-    },
-    // { $project: { results: {$split: ["$text_message",":"]}} },
+    // {
+    //   $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$results", 0 ] }, "$$ROOT" ] } }
+    // },
     {$unwind: "$results"},
   ])
   .exec((err, result)=>{
@@ -117,20 +117,31 @@ exports.pesanmasuk = async (req, res, next) => {
       next(err)
     }
 
-   res.render('pesanMasuk', {
+    result.forEach(doc => {
+      if(doc.cc_message !== usermail){
+        personalprofile = doc.results
+      }else{
+        pesanMasuk.push(doc)
+        personalprofile = doc.results 
+      }
+    })
+
+  res.render('pesanMasuk', {
       title: 'Pesan Masuk',
       helpers: enc_dec,
       inter: setinter,
       read: isread,
-      data : result.map(doc =>({
-          id: doc._id,
-          subjek_message: doc.subjek_message,
-          text_message: doc.text_message,
-          email: doc.email,
-          first_name: doc.first_name,
-          last_name: doc.last_name,
-          createdAt: doc.createdAt,
-          isRead: doc.isRead
+      personal: personalprofile,
+      data: pesanMasuk.map(doc =>({
+        id: doc._id,
+        subjek_message: doc.subjek_message,
+        text_message: doc.text_message,
+        email: doc.email,
+        first_name: doc.results.first_name,
+        last_name: doc.results.last_name,
+        createdAt: doc.createdAt,
+        isRead: doc.isRead,
+        image: doc.results.personalinfoImage
       }))
       .reverse(),
       user : req.user
@@ -240,7 +251,7 @@ exports.bacapesan_byId = async (req, res, next) => {
 /*     {
       $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$message", 0 ] }, "$$ROOT" ] } }
     }, */
-    {$unset:["dari", "cc_message", "message.password", "message.messages", "message._id"]},
+    // {$unset:["dari", "cc_message", "message.password", "message.messages", "message._id"]},
     {$unwind: "$message"}
   ])
   .exec((err, mess)=>{
@@ -248,13 +259,14 @@ exports.bacapesan_byId = async (req, res, next) => {
       console.log(err)
     }
 
-    
     mess.forEach(doc => {
      if(doc._id == ID.id){
       itemMessage = doc
     }
    })
-    
+
+    res.json(ma)
+   res.json(itemMessage)
     res.render('bacaPesan', {
       title: 'Baca Pesan',
       helper: enc_dec,
@@ -266,28 +278,45 @@ exports.bacapesan_byId = async (req, res, next) => {
   })
 }
 
-
 // Pesan Terkirim Get
-exports.pesanterkirim = async (req, res)=>{
+exports.pesanterkirim = async (req, res, next)=>{
+  let pesanTerkirim = [];
+  let personalprofile = {};
+  let userid = req.user._id;
   await usersMessage.aggregate([
-    { $match : {'dari' : {$eq: req.user._id}}},
-    { $lookup : {from: "signup_users", localField: "dari", foreignField: "_id", as: "sent"}},
-    {
-      $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$sent", 0 ] }, "$$ROOT" ] } }
+    { $match : {'dari' : {$eq: userid}}},
+    { $lookup : {
+      from: "signup_users", 
+      localField: "dari", 
+      foreignField: "_id", 
+      as: "sent"
+      }
     },
+    // {
+    //   $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$sent", 0 ] }, "$$ROOT" ] } }
+    // },
     {$unwind: "$sent"}
+
   ])
   .exec((err, data)=>{
     if(err){
-      res.staus(404).json(err);
+      next(err)
     }
 
+    data.forEach(doc =>{
+      if(data.length == 0){
+       
+      }else{
+        pesanTerkirim.push(doc)
+      }
+    })
 
     res.render('pesanTerkirim', {
       title: 'Pesan Terkirim',
-      data : data.map(doc=>({
+      personal: personalprofile, 
+      data : pesanTerkirim.map(doc=>({
         id: doc._id,
-        kepada: doc.kepada_message,
+        cc: doc.cc_message,
         subjek_message: doc.subjek_message,
         text_message: doc.text_message,
         createdAt: doc.createdAt,
@@ -322,7 +351,7 @@ exports.personalInfo = async (req, res) => {
   const useremail = req.user.email
   let personalprofile;
   await usersSignUp.find()
-  .select('first_name last_name email brithday gender phoneNumber profession')
+  .select('first_name last_name email brithday gender phoneNumber profession personalinfoImage')
   .exec()
   .then(result=>{
 
@@ -345,11 +374,10 @@ exports.personalInfo = async (req, res) => {
 
 // Edit Personal Info
 exports.editpersonalInfo = async(req, res, next)=>{
-  console.log(req.params.id)
-  await usersSignUp.findOneAndUpdate({_id: req.params.id}, req.body, {new: true}, (err, docs)=>{
+  await usersSignUp.findOne({_id: req.user._id},(err, docs)=>{
     if(err){
       console.log('Edit Personal Info: ', err)
-      next(err)
+      res.redirect('/')
     }else{
       res.render('personal-info-edit',{
         title: 'Edit Personal Info',
@@ -361,8 +389,45 @@ exports.editpersonalInfo = async(req, res, next)=>{
 }
 
 // Edit Personal Info Save
-exports.editpersonalinfoSAVE = async(req, res, next)=>{
-  await usersSignUp.findByIdAndUpdate({_id: req.params.id}, req.body, (err, docs)=>{
+exports.editpersonalinfoSAVE = async (req, res, next)=>{
+  let id = req.params.id;
+  let new_image = '';
+  const {first_name, last_name, brithday, gender, profession, email, phoneNumber } = req.body
+  
+   if(req.file){
+    var records = {
+      first_name,
+      last_name,
+      brithday,
+      gender,
+      profession,
+      email,
+      phoneNumber, 
+      personalinfoImage: req.file.filename
+    }
+  }else{
+    var records = {
+      first_name,
+      last_name,
+      brithday,
+      gender,
+      profession,
+      email,
+      phoneNumber, 
+    }
+  }
+
+  // if(req.file){
+  //   new_image = req.file.filename;
+  //   try {
+  //     fs.unlinkSync('./uploads/'+req.body.old_image)
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // }else{
+  //   new_image = req.body.old_image;
+  // }
+  await usersSignUp.findByIdAndUpdate(id, records, (err, docs)=>{
     if(err){
       console.log('something wrong in edit personal info save', err);
       next(err)
