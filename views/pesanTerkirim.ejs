@@ -129,16 +129,23 @@
 								<% include ./partials/formmessage.ejs %>
 							</div>
 							<ul class="inbox-nav inbox-divider">
-								<li>
-									<a href="/pesanMasuk"><i class="fa fa-inbox"></i> Pesan Masuk <span class="label label-danger pull-right"></span></a>
-								</li>
-								<% if(!data.length) { %>
+								<% if(!pesanMasuk.length) { %>
+									<li class="">
+										<a href="/pesanMasuk"><i class="fa fa-envelope-o"></i> Pesan Masuk <span class="label label-danger pull-right">Not Message</span></a></a>
+									</li>
+								<% }else{ %>
+									<li class="">
+										<a href="/pesanMasuk"><i class="fa fa-envelope-o"></i> Pesan Masuk <span class="label label-danger pull-right"><%= pesanMasuk.length %></span></a></a>
+									</li>
+								<% } %>
+
+								<% if(!pesanTerkirim.length) { %>
 									<li class="active">
 										<a href="/pesanTerkirim"><i class="fa fa-envelope-o"></i> Pesan Terkirim <span class="label label-danger pull-right">Not Send</span></a></a>
 									</li>
 								<% }else{ %>
 									<li class="active">
-										<a href="/pesanTerkirim"><i class="fa fa-envelope-o"></i> Pesan Terkirim <span class="label label-danger pull-right"><%= data.length %>></span></a></a>
+										<a href="/pesanTerkirim"><i class="fa fa-envelope-o"></i> Pesan Terkirim <span class="label label-danger pull-right"><%= pesanTerkirim.length %></span></a></a>
 									</li>
 								<% } %>
 								<li>
@@ -215,9 +222,9 @@
 													</div>
 													<table class="table table-inbox table-sm icon-hover" role="grid">
 														<tbody>
-                              								<% if(data.length) { %>
+                              								<% if(pesanTerkirim.length) { %>
 
-															<% data.forEach(function(psn){ %>
+															<% pesanTerkirim.forEach(function(psn){ %>
 																<tr id="chat-list" name= "ids" data-link="bacaPesan/<%=psn.id%>" data-target="_SELF">
 																	<td class="inbox-small-cells ic">
 																		<input type="checkbox" class="mail-checkbox">

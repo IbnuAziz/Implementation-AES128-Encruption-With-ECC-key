@@ -6,5 +6,5 @@ const { ensureAuthenticated } = require('../../config/auth');
 
 /* GET home page. */
 router.get('/', ensureAuthenticated, homeController.home);
-
+router.get('/coba', ensureAuthenticated, homeController.coba);
 module.exports = router;

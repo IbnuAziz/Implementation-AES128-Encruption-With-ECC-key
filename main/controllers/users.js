@@ -8,7 +8,6 @@ const usersSignUp = require('../models/usersSignUp');
 const enc_dec = require('../../public/js/encANDdec');
 const setinter = require('../../public/js/formfunc');
 const isread = require('../../public/js/isread');
-const { data } = require('jquery');
 
 mongoose.set('useCreateIndex', true);
 // Sign In GET
@@ -16,6 +15,22 @@ exports.signIn = async (req, res)=>{
   res.render('signIn', {title: 'Login Users'});
 };
 
+// Get Data dan use Globaly
+var usermail;
+var userid;
+async function getData() {
+    return {
+        masuk: await usersMessage.find({'cc_message' : {$eq: usermail}}),
+        terkirim: await usersMessage.find({'dari': {$eq: userid}})
+    }
+}
+
+async function getCoba() {
+  var message = await usersMessage.find({'cc_message' : {$eq: usermail}})
+  for(const msg of message){
+      console.log(msg) 
+  }
+}
 // Sign In POST
 exports.signIn_post = async (req, res, next)=>{
   passport.authenticate('local', {
@@ -98,41 +113,38 @@ async function insertRecordsignUp (req, res) {
   }
 }
 
+// pesan Masuk Function
+async function incomingMessage() {
+  return{
+    incoming: await usersMessage.aggregate([
+      { $match : {'cc_message' : {$eq: usermail}}},
+      { $lookup: { from: "signup_users", localField: "dari", foreignField: "_id", as: "results"  } },
+      {$unwind: "$results"},
+    ])
+  }
+}
 
 // Alternative Pesan Masuk Get From MongoDB
 exports.pesanmasuk = async (req, res, next) => {
-  let pesanMasuk=[];
-  let personalprofile={};
-  let usermail = req.user.email
+  usermail = req.user.email
+  userid = req.user._id
+  let docs = await getData();
+
   await usersMessage.aggregate([
-    // { $match : {'dari' : {$ne: req.user._id}}},
+    { $match : {'cc_message' : {$eq: usermail}}},
     { $lookup: { from: "signup_users", localField: "dari", foreignField: "_id", as: "results"  } },
-    // {
-    //   $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$results", 0 ] }, "$$ROOT" ] } }
-    // },
     {$unwind: "$results"},
   ])
   .exec((err, result)=>{
     if(err){
       next(err)
     }
-
-    result.forEach(doc => {
-      if(doc.cc_message !== usermail){
-        personalprofile = doc.results
-      }else{
-        pesanMasuk.push(doc)
-        personalprofile = doc.results 
-      }
-    })
-
+    
   res.render('pesanMasuk', {
       title: 'Pesan Masuk',
       helpers: enc_dec,
-      inter: setinter,
-      read: isread,
-      personal: personalprofile,
-      data: pesanMasuk.map(doc =>({
+      pesanTerkirim: docs.terkirim,
+      pesanMasuk: result.map(doc =>({
         id: doc._id,
         subjek_message: doc.subjek_message,
         text_message: doc.text_message,
@@ -147,10 +159,6 @@ exports.pesanmasuk = async (req, res, next) => {
       user : req.user
     })
   })
-}
-
-exports.inter = function interV(){
-  console.log('interval')
 }
 
 // Dynamic Modal Body Form Get
@@ -241,17 +249,17 @@ exports.coba_get = async (req, res) => {
 // Get Data By Id
 exports.bacapesan_byId = async (req, res, next) => {
   const ID = req.params;
+  userid = req.user._id;
   let itemMessage;
+  let docs = await getData()
+  let helper = await enc_dec;
+
   await usersMessage.aggregate([
     { $match : {$or: [
-      {'dari' : {$ne: req.user._id}}, 
-      {'dari' : {$eq: req.user._id}}
+      {'dari' : {$ne: userid}}, 
+      {'dari' : {$eq: userid}}
     ]}},
     { $lookup: { from: "signup_users", localField: "dari", foreignField: "_id", as: "message"  } },
-/*     {
-      $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$message", 0 ] }, "$$ROOT" ] } }
-    }, */
-    // {$unset:["dari", "cc_message", "message.password", "message.messages", "message._id"]},
     {$unwind: "$message"}
   ])
   .exec((err, mess)=>{
@@ -265,11 +273,11 @@ exports.bacapesan_byId = async (req, res, next) => {
     }
    })
 
-    res.json(ma)
-   res.json(itemMessage)
     res.render('bacaPesan', {
       title: 'Baca Pesan',
-      helper: enc_dec,
+      helper: helper,
+      pesanMasuk: docs.masuk,
+      pesanTerkirim: docs.terkirim,
       data : itemMessage,
       user : req.user
     })
@@ -280,9 +288,9 @@ exports.bacapesan_byId = async (req, res, next) => {
 
 // Pesan Terkirim Get
 exports.pesanterkirim = async (req, res, next)=>{
-  let pesanTerkirim = [];
-  let personalprofile = {};
-  let userid = req.user._id;
+  userid = req.user._id
+  let docs = await getData()
+
   await usersMessage.aggregate([
     { $match : {'dari' : {$eq: userid}}},
     { $lookup : {
@@ -292,9 +300,6 @@ exports.pesanterkirim = async (req, res, next)=>{
       as: "sent"
       }
     },
-    // {
-    //   $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$sent", 0 ] }, "$$ROOT" ] } }
-    // },
     {$unwind: "$sent"}
 
   ])
@@ -303,18 +308,10 @@ exports.pesanterkirim = async (req, res, next)=>{
       next(err)
     }
 
-    data.forEach(doc =>{
-      if(data.length == 0){
-       
-      }else{
-        pesanTerkirim.push(doc)
-      }
-    })
-
     res.render('pesanTerkirim', {
       title: 'Pesan Terkirim',
-      personal: personalprofile, 
-      data : pesanTerkirim.map(doc=>({
+      pesanMasuk: docs.masuk,
+      pesanTerkirim : data.map(doc=>({
         id: doc._id,
         cc: doc.cc_message,
         subjek_message: doc.subjek_message,
@@ -348,15 +345,18 @@ exports.message_delete = async (req, res, next) => {
 
 // Personal Info
 exports.personalInfo = async (req, res) => {
-  const useremail = req.user.email
+  usermail = req.user.email;
+  userid = req.user._id;
   let personalprofile;
+  let docs = await getData();
+
   await usersSignUp.find()
   .select('first_name last_name email brithday gender phoneNumber profession personalinfoImage')
   .exec()
   .then(result=>{
 
     result.forEach(doc => {
-      if(doc.email == useremail){
+      if(doc.email == usermail){
         personalprofile = doc
      }
     })
@@ -364,6 +364,8 @@ exports.personalInfo = async (req, res) => {
     res.render('personalinfo', {
       title : 'Setting Profile',
       data: personalprofile,
+      pesanMasuk: docs.masuk,
+      pesanTerkirim: docs.terkirim,
       user : req.user,
     });
   })
@@ -374,15 +376,21 @@ exports.personalInfo = async (req, res) => {
 
 // Edit Personal Info
 exports.editpersonalInfo = async(req, res, next)=>{
-  await usersSignUp.findOne({_id: req.user._id},(err, docs)=>{
+  usermail = req.user.email;
+  userid = req.user._id;
+  let docs = await getData();
+
+  await usersSignUp.findOne({_id: req.user._id},(err, doc)=>{
     if(err){
       console.log('Edit Personal Info: ', err)
       res.redirect('/')
     }else{
       res.render('personal-info-edit',{
         title: 'Edit Personal Info',
-        user: req.user,
-        data: docs
+        data: doc,
+        pesanMasuk: docs.masuk,
+        pesanTerkirim: docs.terkirim,
+        user: req.user
       })
     }
   })
@@ -432,6 +440,11 @@ exports.editpersonalinfoSAVE = async (req, res, next)=>{
       console.log('something wrong in edit personal info save', err);
       next(err)
     }else{
+      req.flash(
+        'success_msg',
+        'Data Successfully Edited!',
+        id
+      );
       res.redirect('/personalinfo')
     }
   })

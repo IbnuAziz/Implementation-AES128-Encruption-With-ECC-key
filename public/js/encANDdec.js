@@ -25,42 +25,49 @@ const IV_LENGTH = 16;
 
 function encrypt(plaintext) {
     try {
-    var IV = crypto.randomBytes(IV_LENGTH).toString('hex')
+        // random initialization vector
+        var iv = crypto.randomBytes(IV_LENGTH);
 
-    var chiper = crypto.createCipheriv('aes-128-gcm', Buffer.from(aliceSharedKey, 'hex'), IV);
+        // AES 128 GCM Mode
+        var cipher = crypto.createCipheriv('aes-128-gcm', Buffer.from(aliceSharedKey, 'hex'), iv);
 
-    var encrypted = chiper.update(plaintext, 'utf8','hex');
-    encrypted += chiper.final('hex');
+        // encrypt the given text
+        var encrypted = Buffer.concat([cipher.update(plaintext, 'utf8'), cipher.final()]);
 
-    var tag = chiper.getAuthTag().toString('hex');
+        // extract the auth tag
+        var tag = cipher.getAuthTag();
 
-    return "".concat(IV, tag, encrypted);
-    }catch(error){
-        console.log('No Encrypted: ', error)
+        // generate output
+        return Buffer.concat([iv, tag, encrypted]).toString('hex');
+
+    }catch(e){
+        console.log('cannot encrpt: ', e)
     }
 }
 
 function decrypt(ciphertext) {
     try {
-        var Ddata = ciphertext;
+        // hex decoding
+        var bData = Buffer.from(ciphertext, 'hex');
 
-        var iv = Ddata.slice(0, 32),
-        tag = Ddata.slice(32, 64),
-        text = Ddata.slice(64);
-        
-        var dechiper = crypto.createDecipheriv('aes-128-gcm', Buffer.from(bobSharedKey, 'hex'), iv);
-        
-        dechiper.setAuthTag(Buffer.from(tag, 'hex'));
-    
-        var buff = [];
-        var decrypted = dechiper.update(text, 'hex', 'utf8');
+        // convert data to buffers
+        let iv = bData.slice(0, 16);
+        let tag = bData.slice(16, 32);
+        let text = bData.slice(32);
 
-        buff.push(decrypted);
-        buff.push(dechiper.final('utf8'));
-        return buff.join('').replace(/^"(.*)"$/, '$1');
+        // AES 128 GCM Mode
+        var decipher = crypto.createDecipheriv('aes-128-gcm', Buffer.from(bobSharedKey, 'hex'), iv);
+        decipher.setAuthTag(Buffer.from(tag, 'hex'));
 
-    } catch (error) {
-        console.log('No Decrypted: ', error)
+        // encrypt the given text
+        /* var decrypted = Buffer.concat([decipher.update(text,'binary' ,'utf8'), decipher.final()]); */
+        var decrypted = decipher.update(text, 'hex', 'utf8'); 
+        decrypted += decipher.final('utf8');
+
+        return decrypted.replace(/^"(.*)"$/, '$1');
+
+    }catch(e){
+        console.log('cannot decrypt : ', e)
     }
 }
 

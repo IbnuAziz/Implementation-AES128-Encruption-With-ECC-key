@@ -128,12 +128,25 @@
 							</div>
 							
 							<ul class="inbox-nav inbox-divider">
-								<li class="">
-									<a href="/pesanMasuk"><i class="fa fa-inbox"></i> Pesan Masuk <span class="label label-danger pull-right"></span></a>
-								</li>
-								<li>
-									<a href="/pesanTerkirim"><i class="fa fa-envelope-o"></i> Pesan Terkirim</a>
-								</li>
+								<% if(pesanMasuk.length){ %>
+									<li class="">
+										<a href="/pesanMasuk"><i class="fa fa-inbox"></i> Pesan Masuk <span class="label label-danger pull-right"><%= pesanMasuk.length %></span></a>
+									</li>	
+								<% }else{ %>
+									<li class="">
+										<a href="/pesanMasuk"><i class="fa fa-inbox"></i> Pesan Masuk <span class="label label-danger pull-right">No Message</span></a>
+									</li>
+								<% } %>
+
+								<% if (pesanTerkirim.length){ %>
+									<li>
+										<a href="/pesanTerkirim"><i class="fa fa-envelope-o"></i> Pesan Terkirim <span class="label label-danger pull-right"><%= pesanTerkirim.length %></span></a>
+									</li>
+								<% }else{ %>
+									<li>
+										<a href="/pesanTerkirim"><i class="fa fa-envelope-o"></i> Pesan Terkirim <span class="label label-danger pull-right">No Send</span></a>
+									</li>
+								<% } %>
 								<li>
 									<a href="#"><i class="fa fa-bookmark-o"></i> Penting</a>
 								</li>

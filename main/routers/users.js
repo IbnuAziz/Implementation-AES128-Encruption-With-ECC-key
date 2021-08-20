@@ -49,9 +49,6 @@ router.get('/pesanTerkirim', ensureAuthenticated, usersController.pesanterkirim)
 router.get('/tulisPesan', ensureAuthenticated, usersController.tulispesan);
 router.get('/bacaPesan/:id', ensureAuthenticated, usersController.bacapesan_byId);
 router.get('/personalinfo?', ensureAuthenticated, usersController.personalInfo);
-router.get('/confirm', (req, res) => {
-    res.json('confrim');
-});
 router.post('/pesanMasuk', ensureAuthenticated, usersController.pesanmasuk_save);
 router.get('/logout', usersController.logoutUsers);
 router.get('/deletePesan/:id', ensureAuthenticated, usersController.message_delete);

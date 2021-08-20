@@ -55,6 +55,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'assets')));
+app.use('/personal-info-edit', express.static('public'))
+app.use('/bacaPesan', express.static('public'))
 app.use(express.static('uploads'));
 
 

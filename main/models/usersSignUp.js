@@ -26,7 +26,7 @@ var UsersignUp = new Schema({
     },
     gender:{
         type: String,
-        default: 'not set',
+        default: 'Choose...',
     },
     phoneNumber:{
         type: String,

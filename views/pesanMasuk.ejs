@@ -128,18 +128,25 @@
 							</div>
 							
 							<ul class="inbox-nav inbox-divider">
-								<% if(!data.length) { %>
+								<% if(!pesanMasuk.length) { %>
 									<li class="active">
 										<a href="/pesanMasuk"><i class="fa fa-inbox"></i> Pesan Masuk <span class="label label-danger pull-right">No Message</span></a>
 									</li>
 								<% }else{ %>
 									<li class="active">
-										<a href="/pesanMasuk"><i class="fa fa-inbox"></i> Pesan Masuk <span class="label label-danger pull-right"><%= data.length %></span></a>
+										<a href="/pesanMasuk"><i class="fa fa-inbox"></i> Pesan Masuk <span class="label label-danger pull-right"><%= pesanMasuk.length %></span></a>
 									</li>
 								<% } %>
-								<li>
-									<a href="/pesanTerkirim"><i class="fa fa-envelope-o"></i> Pesan Terkirim</a>
-								</li>
+
+								<% if(!pesanTerkirim.length) { %>
+									<li>
+										<a href="/pesanTerkirim"><i class="fa fa-envelope-o"></i> Pesan Terkirim <span class="label label-danger pull-right">No Send</span></a>
+									</li>
+								<% }else{ %>
+									<li>
+										<a href="/pesanTerkirim"><i class="fa fa-envelope-o"></i> Pesan Terkirim <span class="label label-danger pull-right"><%= pesanTerkirim.length %></span></a>
+									</li>
+								<% } %>
 								<li>
 									<a href="#"><i class="fa fa-bookmark-o"></i> Penting</a>
 								</li>
@@ -239,8 +246,8 @@
 													</div>
 													<table class="table table-inbox table-sm icon-hover">
 														<tbody>
-                              								<% if(data.length) { %>
-															<% data.forEach(function(msgs){ %>
+                              								<% if(pesanMasuk.length) { %>
+															<% pesanMasuk.forEach(function(msgs){ %>
 																<tr class="gl unread" id="chat-list" name= "ids" data-link="bacaPesan/<%=msgs.id%>" data-target="_SELF" data-status="unread">
 																	<td class="inbox-small-cells ic">
 																		<input type="checkbox" class="mail-checkbox">

@@ -128,14 +128,26 @@
 								<button class="btn btn-compose tls" id="toggle" onclick="openForm()">Tulis Pesan</button>
 								<% include ./partials/formmessage.ejs %>
 							</div>
-							<%- include ./partials/errMessage.ejs %>
 							<ul class="inbox-nav inbox-divider">
-								<li class="">
-									<a href="/pesanMasuk"><i class="fa fa-inbox"></i> Pesan Masuk <span class="label label-danger pull-right"></span></a>
-								</li>
-								<li>
-									<a href="/pesanTerkirim"><i class="fa fa-envelope-o"></i> Pesan Terkirim</a>
-								</li>
+								<% if(!pesanMasuk.length) { %>
+									<li class="active">
+										<a href="/pesanMasuk"><i class="fa fa-inbox"></i> Pesan Masuk <span class="label label-danger pull-right">No Message</span></a>
+									</li>
+								<% }else{ %>
+									<li class="active">
+										<a href="/pesanMasuk"><i class="fa fa-inbox"></i> Pesan Masuk <span class="label label-danger pull-right"><%= pesanMasuk.length %></span></a>
+									</li>
+								<% } %>
+
+								<% if(!pesanTerkirim.length) { %>
+									<li>
+										<a href="/pesanTerkirim"><i class="fa fa-envelope-o"></i> Pesan Terkirim <span class="label label-danger pull-right">No Send</span></a>
+									</li>
+								<% }else{ %>
+									<li>
+										<a href="/pesanTerkirim"><i class="fa fa-envelope-o"></i> Pesan Terkirim <span class="label label-danger pull-right"><%= pesanTerkirim.length %></span></a>
+									</li>
+								<% } %>
 								<li>
 									<a href="#"><i class="fa fa-bookmark-o"></i> Penting</a>
 								</li>
@@ -175,6 +187,7 @@
 							<div class="main-body">
 								<div class="page-wrapper homePage">
 									<div class="page-body">
+										<%- include ./partials/errMessage.ejs %>
 										<div class="row">
 											<div class="col-sm-12">
                                                 <div class="card">
@@ -192,10 +205,10 @@
 																<div class="row">
 																	<div class="col-md-4">
 																		<div class="profile-img">
-																			<img src="/<%= data.personalinfoImage %>" alt=""/>
+																			<img id = "output" src="/<%= data.personalinfoImage %>" alt=""/>
 																			<div class="file">
 																				<label for="personalinfoImage" class="changetext">Change Photo</label>
-																				<input type="file" name="personalinfoImage" class="filecursor"/>
+																				<input type="file" accept="image/*" onchange="loadFile(event)" name="personalinfoImage" class="filecursor"/>
 																			</div>
 																			<input type="hidden" name="old_image" value="<%= data.personalinfoImage %>"/>
 																		</div>
@@ -277,7 +290,7 @@
 																						  <input type="text" class="form-control" id="inputPhone" placeholder="<%- data.phoneNumber %>" name="phoneNumber" value="<%- data.phoneNumber %>">
 																						</div>
 																					</div>
-																			</div>
+																			   	</div>
 																			</div>
 																		</div>
 																	</div>
@@ -301,5 +314,16 @@
 <% include templates/footer.ejs %>
 <script type="text/javascript" src="/js/modalBody.js "></script>
 <script type="text/javascript" src="/js/formfunc.js "></script>
+<script>
+	// preview image before updated
+	var loadFile = function(event) {
+    var reader = new FileReader();
+    reader.onload = function(){
+      var output = document.getElementById('output');
+      output.src = reader.result;
+    };
+    reader.readAsDataURL(event.target.files[0]);
+  };
+</script>
 </body>
 </html>

@@ -129,20 +129,24 @@
 								<% include ./partials/formmessage.ejs %>
 							</div>
 							<ul class="inbox-nav inbox-divider">
-								<% if(!data.length){ %>
-									<li class="active">
+								<% if(pesanMasuk.length){ %>
+									<li class="">
+										<a href="/pesanMasuk"><i class="fa fa-inbox"></i> Pesan Masuk <span class="label label-danger pull-right"><%= pesanMasuk.length %></span></a>
+									</li>	
+								<% }else{ %>
+									<li class="">
 										<a href="/pesanMasuk"><i class="fa fa-inbox"></i> Pesan Masuk <span class="label label-danger pull-right">No Message</span></a>
 									</li>
+								<% } %>
+
+								<% if (pesanTerkirim.length){ %>
 									<li>
-										<a href="/pesanTerkirim"><i class="fa fa-envelope-o"></i> Pesan Terkirim <span class="label label-danger pull-right">No Send</span></a>
+										<a href="/pesanTerkirim"><i class="fa fa-envelope-o"></i> Pesan Terkirim <span class="label label-danger pull-right"><%= pesanTerkirim.length %></span></a>
 									</li>
 								<% }else{ %>
 									<li>
-										<a href="/pesanMasuk"><i class="fa fa-inbox"></i> Pesan Masuk <span class="label label-danger pull-right"><%= data.length %></span></a>
+										<a href="/pesanTerkirim"><i class="fa fa-envelope-o"></i> Pesan Terkirim <span class="label label-danger pull-right">No Send</span></a>
 									</li>
-									<li class="active">
-										<a href="/pesanTerkirim"><i class="fa fa-envelope-o"></i> Pesan Terkirim <span class="label label-danger pull-right"><%= data.length %></span></a>
-									</li>			
 								<% } %>
 								<li>
 									<a href="#"><i class="fa fa-bookmark-o"></i> Penting</a>
@@ -208,7 +212,11 @@
                                                     <div class="sender-info">
                                                         <div class="row">
                                                             <div class="col-md-12">
-                                                                <img alt="" src="/images/ava_profile.jpg">
+																<% if(data.cc_message === user.email){ %>
+																	<img alt="" src="/<%= data.message.personalinfoImage %>">
+																<% }else{ %>
+																	<img alt="" src="/<%= user.personalinfoImage %>">
+																<% } %>
                                                                 <strong><%=data.message.first_name%> <%=data.message.last_name%></strong>
                                                                 <span>[<%=data.message.email%>]</span>
 																to

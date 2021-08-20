@@ -30,7 +30,7 @@
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "requirejs": "^2.3.6",
-    "sweetalert2": "^11.0.19"
+    "setinterval": "^0.2.4"
   },
   "devDependencies": {
     "nodemon": "^2.0.7"
