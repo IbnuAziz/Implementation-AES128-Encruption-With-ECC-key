@@ -2,10 +2,11 @@
 <html>
 <head>
 	<% include templates/head.ejs %>
+	<link href="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href='/css/home.css'>
-  <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet"> 
-  <!--Dcounts-->
-  <link rel="stylesheet" type="text/css" href='/css/dcounts.css'>
+  	<link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet"> 
+ 	<!--Dcounts-->
+  	<link rel="stylesheet" type="text/css" href='/css/dcounts.css'>
 </head>
 <body>
 	<!-- Pre-loader start -->
@@ -128,15 +129,9 @@
 							</div>
 							
 							<ul class="inbox-nav inbox-divider">
-								<% if(!pesanMasuk.length) { %>
-									<li class="active">
-										<a href="/pesanMasuk"><i class="fa fa-inbox"></i> Pesan Masuk <span class="label label-danger pull-right">No Message</span></a>
-									</li>
-								<% }else{ %>
-									<li class="active">
-										<a href="/pesanMasuk"><i class="fa fa-inbox"></i> Pesan Masuk <span class="label label-danger pull-right"><%= pesanMasuk.length %></span></a>
-									</li>
-								<% } %>
+								<li class="active">
+									<a href="/pesanMasuk"><i class="fa fa-inbox"></i> Pesan Masuk <span class="label label-danger pull-right" id="masuk"></span></a>
+								</li>
 
 								<% if(!pesanTerkirim.length) { %>
 									<li>
@@ -149,12 +144,6 @@
 								<% } %>
 								<li>
 									<a href="#"><i class="fa fa-bookmark-o"></i> Penting</a>
-								</li>
-								<li>
-									<a href="#"><i class=" fa fa-external-link"></i> Draft <span class="label label-info pull-right">30</span></a>
-								</li>
-								<li>
-									<a href="#"><i class=" fa fa-trash-o"></i> Sampah</a>
 								</li>
 							</ul>
 						</div>
@@ -190,61 +179,30 @@
 											<div class="col-sm-12">
 												<div class="inbox-body">
 													<%- include ./partials/errMessage.ejs %>
-													<div class="mail-option">
-														<div class="chk-all">
-															<input type="checkbox" class="mail-checkbox mail-group-checkbox">
-															<div class="btn-group">
-																<a data-toggle="dropdown" href="#" class="btn mini all" aria-expanded="false">
-																	All
-																	<i class="fa fa-angle-down "></i>
-																</a>
-																<ul class="dropdown-menu">
-																	<li><a href="#"> None</a></li>
-																	<li><a href="#"> Read</a></li>
-																	<li><a href="#"> Unread</a></li>
-																</ul>
-															</div>
-														</div>
-														<div class="btn-group">
-															<a data-original-title="Refresh" data-placement="top" data-toggle="dropdown" href="#" class="btn mini tooltips">
-																<i class=" fa fa-refresh"></i>
-															</a>
-														</div>
-														<div class="btn-group hidden-phone">
-															<a data-toggle="dropdown" href="#" class="btn mini blue" aria-expanded="false">
-																More
-																<i class="fa fa-angle-down "></i>
-															</a>
-															<ul class="dropdown-menu">
-																<li><a href="#"><i class="fa fa-pencil"></i> Mark as Read</a></li>
-																<li><a href="#"><i class="fa fa-ban"></i> Spam</a></li>
-																<li class="divider"></li>
-																<li><a href="#"><i class="fa fa-trash-o"></i> Delete</a></li>
-															</ul>
-														</div>
-														<div class="btn-group">
-															<a data-toggle="dropdown" href="#" class="btn mini blue">
-																Move to
-																<i class="fa fa-angle-down "></i>
-															</a>
-															<ul class="dropdown-menu">
-																<li><a href="#"><i class="fa fa-pencil"></i> Mark as Read</a></li>
-																<li><a href="#"><i class="fa fa-ban"></i> Spam</a></li>
-																<li class="divider"></li>
-																<li><a href="#"><i class="fa fa-trash-o"></i> Delete</a></li>
-															</ul>
-														</div>
-														<ul class="unstyled inbox-pagination">
-															<li><span>1-50 of 234</span></li>
-															<li>
-																<a class="np-btn" href="#"><i class="fa fa-angle-left  pagination-left"></i></a>
-															</li>
-															<li>
-																<a class="np-btn" href="#"><i class="fa fa-angle-right pagination-right"></i></a>
-															</li>
-														</ul>
-													</div>
-													<table class="table table-inbox table-sm icon-hover">
+													<div id="toolbar">
+														<button id="remove" class="btn btn-danger" disabled>
+														  <i class="fa fa-trash"></i> Delete
+													  </div>
+
+													<table 
+													class="table table-borderless table-inbox icon-hover" 
+													id="table"
+													data-id-field="id"
+													data-toolbar="#toolbar"
+													data-search="true"
+  													data-click-to-select="true"
+													data-show-refresh="true"
+													data-auto-refresh="true"
+  													data-auto-refresh-interval="5"
+													data-show-pagination-switch="true"
+													data-show-fullscreen="true"
+													data-show-export="true"
+													data-pagination="true"
+													data-url="http://localhost:3000/pesanmasuknotrender"
+													
+													>
+													</table>
+													<!-- <table class="table table-inbox table-sm icon-hover">
 														<tbody>
                               								<% if(pesanMasuk.length) { %>
 															<% pesanMasuk.forEach(function(msgs){ %>
@@ -272,7 +230,7 @@
 																</tr>
 															<% } %>
 														</tbody>
-													</table>
+													</table> -->
 													<!-- End Table Mail-->
 													</div>
 												</div>
@@ -288,18 +246,20 @@
 		</div>
 	</div> 
 	<% include templates/footer.ejs %>
-	
+
+	<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/bootstrap-table.min.js"></script>
+	<script src="https://unpkg.com/bootstrap-table@1.18.3/dist/extensions/auto-refresh/bootstrap-table-auto-refresh.min.js"></script>
 	<script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
 	<script type="text/javascript" src="/js/modalBody.js "></script>
 	<script type="text/javascript" src="/js/rdmsgJquery.js "></script>
 	<script type="text/javascript" src="/js/formfunc.js "></script>
-	<!-- <script type="text/javascript" src="https://requirejs.org/docs/release/2.3.6/minified/require.js"></script> -->
+	<script type="text/javascript" src="/js/autoloadtable.js "></script>
+	<script type="text/javascript" src="/js/autoloadmsg.js "></script>
 	<script>
-
 		$(function () {
 			$('[data-toggle="tooltip"]').tooltip()
 		});
-	
+
 		// $(document).ready(function () {	
 
 		// 	$(document).on("click", '#chat-list', function (e) {

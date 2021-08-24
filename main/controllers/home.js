@@ -1,7 +1,5 @@
 const usersSignUp = require('../models/usersSignUp');
 const usersMessage = require('../models/usersMessage');
-const Timer = require('setinterval');
-const SetInterval = require('set-interval')
 
 var user;
 var id;
@@ -14,14 +12,24 @@ async function getData() {
 }
 
 async function getCoba() {
-    var message = await usersMessage.find({'cc_message' : {$eq: user}})
-    for(const msg of message){
-        console.log(msg) 
-    }
+    const response = await usersMessage.aggregate([
+            { $match : {'cc_message' : {$eq: user}}},
+            { $lookup: { from: "signup_users", localField: "dari", foreignField: "_id", as: "results"  } },
+            {$unwind: "$results"},
+        ]);
+    return response;
 }
+
 exports.coba = async (req, res)=>{
-    // let data = await getCoba()
-    setInterval(getCoba, 3000)
+    let inter = setInterval(() => {
+        usersMessage.find()
+    }, 1000);
+    // let data = await getCoba().catch(error => {
+    //     console.error(error)
+    // })
+    // console.log(data)
+    
+    console.log(inter)
 }
 
 // Pesan Masuk Get Data From Database MongoDB

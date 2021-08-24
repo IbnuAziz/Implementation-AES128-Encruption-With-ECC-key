@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 var bcrypt = require('bcryptjs');
 const passport = require('passport');
 const fs = require('fs');
+const nodemailer = require('nodemailer');
 
 const usersMessage = require('../models/usersMessage');
 const usersSignUp = require('../models/usersSignUp');
@@ -25,12 +26,6 @@ async function getData() {
     }
 }
 
-async function getCoba() {
-  var message = await usersMessage.find({'cc_message' : {$eq: usermail}})
-  for(const msg of message){
-      console.log(msg) 
-  }
-}
 // Sign In POST
 exports.signIn_post = async (req, res, next)=>{
   passport.authenticate('local', {
@@ -115,13 +110,51 @@ async function insertRecordsignUp (req, res) {
 
 // pesan Masuk Function
 async function incomingMessage() {
-  return{
-    incoming: await usersMessage.aggregate([
-      { $match : {'cc_message' : {$eq: usermail}}},
-      { $lookup: { from: "signup_users", localField: "dari", foreignField: "_id", as: "results"  } },
-      {$unwind: "$results"},
-    ])
-  }
+  let messages= [];
+  const message = await usersMessage.aggregate([
+            { $match : {'cc_message' : {$eq: usermail}}},
+            { $lookup: { from: "signup_users", localField: "dari", foreignField: "_id", as: "results"  } },
+            {$unwind: "$results"},
+          ])
+          message.forEach(docs => {
+            messages.push(docs)
+          })
+          
+  return [messages, ret];
+  // console.log('hello')
+} 
+
+// API Pesan Masuk
+exports.pesanmasuknotrender = async (req, res, next) => {
+  usermail = req.user.email
+  userid = req.user._id
+  var resMessage = [];
+  var name;
+
+  await usersMessage.aggregate([
+    { $match : {'cc_message' : {$eq: usermail}}},
+    { $lookup: { from: "signup_users", localField: "dari", foreignField: "_id", as: "results"  } },
+    // {
+    //   $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$results", 0 ] }, "$$ROOT" ] } }
+    // },
+    {$unwind: "$results"},
+  ])
+  .exec((err, result)=>{
+    if(err){
+      next(err)
+    }
+
+    result.forEach(element => {
+      name = element.results
+    });
+
+    resMessage = result.reverse()
+    res.json({
+      total: result.length,
+      totalNotFiltered: result.length,
+      rows: resMessage
+    })
+  })
 }
 
 // Alternative Pesan Masuk Get From MongoDB
@@ -139,7 +172,7 @@ exports.pesanmasuk = async (req, res, next) => {
     if(err){
       next(err)
     }
-    
+
   res.render('pesanMasuk', {
       title: 'Pesan Masuk',
       helpers: enc_dec,
@@ -194,6 +227,7 @@ async function insertRecordmessage(req, res) {
       }else{
         // Create a new message
       const newMessage = new usersMessage(req.body)
+      
       // get userId
       const user = await usersSignUp.findById(req.user._id)
       // assign a message as a dari
@@ -209,9 +243,39 @@ async function insertRecordmessage(req, res) {
         'success_msg',
         'Message Send And Encrypted'
       );
+
+      // let enkripsi = enc_dec.enc(newMessage.text_message)
+      // var transporter = nodemailer.createTransport({
+      //   service: 'gmail',
+      //   auth: {
+      //     user: 'enkripsiaes@gmail.com',
+      //     pass: '@qw3rty123456'
+      //   }
+      // })
+
+      // var mailOption = {
+      //   to: newMessage.cc_message,
+      //   from: '"Enkripsi AES 128" <enkripsiaes@gmail.com>',
+      //   subject: newMessage.subjek_message,
+      //   text: enkripsi
+      // }
+
+      // transporter.sendMail(mailOption, (err, info) => {
+      //   if(err){
+      //     console.log('Error Send Message', err)
+      //   }else{
+      //     console.log({info})
+      //     req.flash(
+      //       'success_msg',
+      //       'Message Send And Encrypted'
+      //     );
+      //     return res.redirect('/')
+      //   }
+        
+      // })
+      res.redirect('/')
       // console.time('Pesan Masuk Time : ')
       // console.timeEnd('Pesan Masuk Time : ')
-      res.redirect('/')
       }
     if(err) throw err
   })
@@ -252,7 +316,7 @@ exports.bacapesan_byId = async (req, res, next) => {
   userid = req.user._id;
   let itemMessage;
   let docs = await getData()
-  let helper = await enc_dec;
+  let helper = enc_dec;
 
   await usersMessage.aggregate([
     { $match : {$or: [
@@ -276,7 +340,6 @@ exports.bacapesan_byId = async (req, res, next) => {
     res.render('bacaPesan', {
       title: 'Baca Pesan',
       helper: helper,
-      pesanMasuk: docs.masuk,
       pesanTerkirim: docs.terkirim,
       data : itemMessage,
       user : req.user
@@ -310,7 +373,6 @@ exports.pesanterkirim = async (req, res, next)=>{
 
     res.render('pesanTerkirim', {
       title: 'Pesan Terkirim',
-      pesanMasuk: docs.masuk,
       pesanTerkirim : data.map(doc=>({
         id: doc._id,
         cc: doc.cc_message,

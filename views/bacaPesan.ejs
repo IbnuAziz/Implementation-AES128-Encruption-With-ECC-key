@@ -129,15 +129,9 @@
 								<% include ./partials/formmessage.ejs %>
 							</div>
 							<ul class="inbox-nav inbox-divider">
-								<% if(pesanMasuk.length){ %>
-									<li class="">
-										<a href="/pesanMasuk"><i class="fa fa-inbox"></i> Pesan Masuk <span class="label label-danger pull-right"><%= pesanMasuk.length %></span></a>
-									</li>	
-								<% }else{ %>
-									<li class="">
-										<a href="/pesanMasuk"><i class="fa fa-inbox"></i> Pesan Masuk <span class="label label-danger pull-right">No Message</span></a>
-									</li>
-								<% } %>
+								<li class="">
+									<a href="/pesanMasuk"><i class="fa fa-inbox"></i> Pesan Masuk <span class="label label-danger pull-right" id="masuk"></span></a>
+								</li>
 
 								<% if (pesanTerkirim.length){ %>
 									<li>
@@ -150,12 +144,6 @@
 								<% } %>
 								<li>
 									<a href="#"><i class="fa fa-bookmark-o"></i> Penting</a>
-								</li>
-								<li>
-									<a href="#"><i class=" fa fa-external-link"></i> Draft <span class="label label-info pull-right">30</span></a>
-								</li>
-								<li>
-									<a href="#"><i class=" fa fa-trash-o"></i> Sampah</a>
 								</li>
 							</ul>
 						</div>
@@ -256,6 +244,7 @@
 <script src="https://cdn.quilljs.com/1.3.7/quill.js"></script>
 <script type="text/javascript" src="/js/modalBody.js "></script>
 <script type="text/javascript" src="/js/formfunc.js "></script>
+<script type="text/javascript" src="/js/autoloadmsg.js "></script>
 <!--   <script type="text/javascript" src="js/modalEffect.js"></script> -->
 </body>
 </html>
